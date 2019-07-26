@@ -1,4 +1,4 @@
-# reGI a0.1.0
+# reGI (reverse-engineered GestINF)
 A minimal, clumsy quotation generator for a small business.
 Made with:
 - peewee 3.9.6, a small and useful ORM for Python (http://docs.peewee-orm.com/en/latest/index.html);
