@@ -13,6 +13,6 @@ I doubt it. There are many sides to this project I'd like to improve substantial
 
 
 ### Changelog
-a0.2.0: further developed GUI and assigned slots to some buttons.
-a0.1.1: added a very rudimental version of the first two GUI pages.
-a0.1.0: first version of the program. Practically nonexistant, LOL.
+- a0.2.0: further developed GUI and assigned slots to some buttons.
+- a0.1.1: added a very rudimental version of the first two GUI pages.
+- a0.1.0: first version of the program. Practically nonexistant, LOL.
