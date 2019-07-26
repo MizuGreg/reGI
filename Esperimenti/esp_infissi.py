@@ -17,7 +17,7 @@ class Infisso():
         self.var1 = kwargs.get("var1", "")
         self.var2 = kwargs.get("var2", "")
 esp_db.db.connect()
-cliente0 = esp_db.Cliente(cognome="Dimaglie", nome="Gregorio")
+cliente0 = esp_db.Cliente(cognome="Dimaglie", nome="Gregorio", via="via C. Golgi, 33", comune="Manduria (TA)")
 prev0 = esp_db.Preventivo(cliente=cliente0, num_prog="1/2019")
 # finché non eseguo cliente0.save() o prev0.save() non fanno parte del db!
 inf0 = Infisso(codice="PF2", lunghezza=2300, altezza=2400)
@@ -28,3 +28,4 @@ for prev in esp_db.Preventivo.select():
     for inf in prev.lista_inf:
         print(str(inf.lunghezza))
 # it works just fine!
+esp_db.db.close()

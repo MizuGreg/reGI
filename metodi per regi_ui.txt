@@ -1,0 +1,33 @@
+from PyQt5.QtGui import QColor
+import regi_db
+    ### IN QUESTO ORDINE!!!
+        self.stackedWidget.setCurrentIndex(0)
+        palette = QtGui.QPalette()
+        palette.setColor(QtGui.QPalette.Background, QColor("#ecffe5"))
+        self.centralwidget.setPalette(palette)
+        self.btn_nuovo_prev.clicked.connect(lambda: self.stackedWidget.setCurrentIndex(1)) 
+        self.btn_nuovo_prev.clicked.connect(self.loadDB)
+        self.btn_scegli_cliente.clicked.connect(self.scegli_cliente)
+        self.btn_scegli_cliente.clicked.connect(lambda: self.stackedWidget.setCurrentIndex(2))
+# ...
+    def loadDB(self):
+        query = regi_db.Cliente.select().dicts()
+        for num_riga, cliente in enumerate(query):
+            self.tab_clienti.insertRow(num_riga)
+            for num_colonna, dato in enumerate(cliente.values()):
+                if num_colonna == 0:
+                    continue # evita la colonna id
+                if dato == None:
+                dato = "<campo vuoto>"
+                    self.tab_clienti.setItem(num_riga, num_colonna-1, QtWidgets.QTableWidgetItem(str(dato)))
+
+    def scegli_cliente(self):
+        pass
+        # row = self.products_table.currentRow()
+        # currentproductid = (self.products_table.item(row, 0).text() )
+        # query = session.query(Product).filter(Product.product_id==str(currentproductid)).first()
+        # session.delete(query)
+        # session.commit()
+        # self.products_table.removeRow(row)
+### ALLA FINE:
+regi_db.regidb_0.close()

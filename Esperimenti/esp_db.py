@@ -22,6 +22,7 @@ class Cliente(Model): # tabella
     num2 = CharField(null=True)
     email = CharField(null=True)
     cantiere = CharField(null=True)
+    # valori = (cognome, nome, via, comune, num1, num2, email, cantiere)
     class Meta: # non so cosa voglia dire: istanze (righe) della tabella
         database = db # questo vuol dire che questo modello usa "db-regi--1.db" come database
 class Preventivo(Model):
@@ -29,6 +30,7 @@ class Preventivo(Model):
     num_prog = CharField(null=True)
     data = DateField(null=True)
     lista_inf = []
+    # valori = (cliente, num_prog, data)
     class Meta:
         database = db
 # la classe Infisso avrà attributi nome, lunghezza, altezza, prezzo, variante1, variante2
