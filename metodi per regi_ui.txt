@@ -2,15 +2,26 @@ from PyQt5.QtGui import QColor
 import regi_db
     ### IN QUESTO ORDINE!!!
         self.stackedWidget.setCurrentIndex(0)
-        palette = QtGui.QPalette()
-        palette.setColor(QtGui.QPalette.Background, QColor("#ecffe5"))
-        self.centralwidget.setPalette(palette)
-        self.btn_nuovo_prev.clicked.connect(lambda: self.stackedWidget.setCurrentIndex(1)) 
-        self.btn_nuovo_prev.clicked.connect(self.loadDB)
+        palette_preventivi = QtGui.QPalette()
+        palette_preventivi.setColor(QtGui.QPalette.Background, QColor("#ccfff0"))
+        self.groupBox.setPalette(palette_preventivi)
+        self.tab_schede.setPalette(palette_preventivi)
+        palette_clienti = QtGui.QPalette()
+        palette_clienti.setColor(QtGui.QPalette.Background, QColor("#ccf0ff"))
+        self.groupBox_2.setPalette(palette_clienti)
+        self.pag_1.setPalette(palette_clienti)
+        palette_progetti = QtGui.QPalette()
+        palette_progetti.setColor(QtGui.QPalette.Background, QColor("#f0ffcc"))
+        self.groupBox_3.setPalette(palette_progetti)
+        self.tree_progetti.setPalette(palette_progetti)
+
+        self.btn_nuovo_prev.clicked.connect(self.scegli_cliente)
+        self.btn_view_anagrafica.clicked.connect(self.view_anagrafica)
         self.btn_scegli_cliente.clicked.connect(self.scegli_cliente)
         self.btn_scegli_cliente.clicked.connect(lambda: self.stackedWidget.setCurrentIndex(2))
 # ...
-    def loadDB(self):
+    def scegli_cliente(self):
+        self.stackedWidget.setCurrentIndex(1)
         query = regi_db.Cliente.select().dicts()
         for num_riga, cliente in enumerate(query):
             self.tab_clienti.insertRow(num_riga)
@@ -18,10 +29,13 @@ import regi_db
                 if num_colonna == 0:
                     continue # evita la colonna id
                 if dato == None:
-                dato = "<campo vuoto>"
-                    self.tab_clienti.setItem(num_riga, num_colonna-1, QtWidgets.QTableWidgetItem(str(dato)))
-
-    def scegli_cliente(self):
+                    dato = "Nessuno"
+                self.tab_clienti.setItem(num_riga, num_colonna-1, QtWidgets.QTableWidgetItem(str(dato)))
+    def view_anagrafica(self):
+        self.scegli_cliente()
+        self.label_2.enabled = False
+        self.btn_scegli_cliente.enabled = False
+    def crea_prev(self):
         pass
         # row = self.products_table.currentRow()
         # currentproductid = (self.products_table.item(row, 0).text() )
@@ -30,4 +44,8 @@ import regi_db
         # session.commit()
         # self.products_table.removeRow(row)
 ### ALLA FINE:
-regi_db.regidb_0.close()
+    # reGI = QtWidgets.QMainWindow()
+    reGI.setWindowTitle("reGI a0.3.0") # non funge
+    reGI.setWindowIcon("icon_0.png") # funge
+    # sys.exit(app.exec_())
+    regi_db.db.close()
