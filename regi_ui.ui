@@ -454,8 +454,8 @@
        <property name="font">
         <font>
          <pointsize>10</pointsize>
-         <weight>75</weight>
-         <bold>true</bold>
+         <weight>50</weight>
+         <bold>false</bold>
         </font>
        </property>
        <property name="cursor">
@@ -503,8 +503,8 @@
        <property name="font">
         <font>
          <pointsize>10</pointsize>
-         <weight>75</weight>
-         <bold>true</bold>
+         <weight>50</weight>
+         <bold>false</bold>
         </font>
        </property>
        <property name="cursor">
@@ -517,13 +517,13 @@
      </widget>
     </widget>
     <widget class="QWidget" name="pag_2">
-     <widget class="QTabWidget" name="tab_schede">
+     <widget class="QTabWidget" name="tab_dettaglio_totale">
       <property name="geometry">
        <rect>
         <x>10</x>
         <y>160</y>
         <width>1481</width>
-        <height>761</height>
+        <height>751</height>
        </rect>
       </property>
       <property name="font">
@@ -560,7 +560,7 @@
           <x>10</x>
           <y>90</y>
           <width>305</width>
-          <height>631</height>
+          <height>621</height>
          </rect>
         </property>
         <property name="font">
@@ -571,21 +571,11 @@
          </font>
         </property>
         <property name="alternatingRowColors">
-         <bool>false</bool>
+         <bool>true</bool>
         </property>
         <property name="spacing">
          <number>3</number>
         </property>
-        <item>
-         <property name="text">
-          <string>[1] PF2A</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>[2] PF1A</string>
-         </property>
-        </item>
        </widget>
        <widget class="QLabel" name="label_23">
         <property name="geometry">
@@ -1036,7 +1026,7 @@ p, li { white-space: pre-wrap; }
          <number>300</number>
         </attribute>
         <attribute name="headerStretchLastSection">
-         <bool>false</bool>
+         <bool>true</bool>
         </attribute>
         <column>
          <property name="text">
@@ -1318,7 +1308,9 @@ p, li { white-space: pre-wrap; }
         </property>
         <property name="font">
          <font>
+          <weight>50</weight>
           <italic>false</italic>
+          <bold>false</bold>
           <underline>false</underline>
           <strikeout>false</strikeout>
           <kerning>true</kerning>
@@ -1727,9 +1719,9 @@ p, li { white-space: pre-wrap; }
        <widget class="QLineEdit" name="edit_cod_prog_5">
         <property name="geometry">
          <rect>
-          <x>1295</x>
-          <y>275</y>
-          <width>120</width>
+          <x>1305</x>
+          <y>340</y>
+          <width>110</width>
           <height>25</height>
          </rect>
         </property>
@@ -1746,9 +1738,9 @@ p, li { white-space: pre-wrap; }
        <widget class="QLabel" name="label_35">
         <property name="geometry">
          <rect>
-          <x>1200</x>
-          <y>280</y>
-          <width>71</width>
+          <x>1195</x>
+          <y>345</y>
+          <width>91</width>
           <height>16</height>
          </rect>
         </property>
@@ -1760,7 +1752,46 @@ p, li { white-space: pre-wrap; }
          </font>
         </property>
         <property name="text">
-         <string>Imponibile</string>
+         <string>Importo lordo</string>
+        </property>
+       </widget>
+       <widget class="QLabel" name="label_37">
+        <property name="geometry">
+         <rect>
+          <x>1195</x>
+          <y>285</y>
+          <width>61</width>
+          <height>16</height>
+         </rect>
+        </property>
+        <property name="font">
+         <font>
+          <pointsize>8</pointsize>
+          <weight>50</weight>
+          <bold>false</bold>
+         </font>
+        </property>
+        <property name="text">
+         <string>IVA</string>
+        </property>
+       </widget>
+       <widget class="QLineEdit" name="edit_cod_prog_6">
+        <property name="geometry">
+         <rect>
+          <x>1325</x>
+          <y>280</y>
+          <width>90</width>
+          <height>25</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+        <property name="readOnly">
+         <bool>true</bool>
+        </property>
+        <property name="placeholderText">
+         <string/>
         </property>
        </widget>
       </widget>
@@ -1772,6 +1803,63 @@ p, li { white-space: pre-wrap; }
        <attribute name="title">
         <string>Totale</string>
        </attribute>
+       <widget class="QLabel" name="label_36">
+        <property name="geometry">
+         <rect>
+          <x>10</x>
+          <y>20</y>
+          <width>101</width>
+          <height>16</height>
+         </rect>
+        </property>
+        <property name="font">
+         <font>
+          <pointsize>8</pointsize>
+          <weight>50</weight>
+          <bold>false</bold>
+         </font>
+        </property>
+        <property name="text">
+         <string>Riepilogo serramenti</string>
+        </property>
+       </widget>
+       <widget class="QTableWidget" name="tableWidget">
+        <property name="geometry">
+         <rect>
+          <x>10</x>
+          <y>50</y>
+          <width>400</width>
+          <height>660</height>
+         </rect>
+        </property>
+        <property name="alternatingRowColors">
+         <bool>true</bool>
+        </property>
+        <property name="sortingEnabled">
+         <bool>true</bool>
+        </property>
+        <attribute name="horizontalHeaderDefaultSectionSize">
+         <number>141</number>
+        </attribute>
+        <attribute name="verticalHeaderVisible">
+         <bool>false</bool>
+        </attribute>
+        <column>
+         <property name="text">
+          <string>Serramento</string>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string>Prezzo unitario lordo</string>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string>N. pezzi</string>
+         </property>
+        </column>
+       </widget>
       </widget>
      </widget>
      <widget class="QFrame" name="frame">
@@ -1794,9 +1882,16 @@ p, li { white-space: pre-wrap; }
         <rect>
          <x>10</x>
          <y>10</y>
-         <width>71</width>
+         <width>91</width>
          <height>16</height>
         </rect>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>10</pointsize>
+         <weight>75</weight>
+         <bold>true</bold>
+        </font>
        </property>
        <property name="text">
         <string>N. Preventivo</string>
@@ -2054,7 +2149,7 @@ p, li { white-space: pre-wrap; }
         <rect>
          <x>10</x>
          <y>90</y>
-         <width>135</width>
+         <width>150</width>
          <height>25</height>
         </rect>
        </property>
@@ -2067,7 +2162,7 @@ p, li { white-space: pre-wrap; }
       <widget class="QToolButton" name="btn_scegli_testo_in">
        <property name="geometry">
         <rect>
-         <x>147</x>
+         <x>162</x>
          <y>90</y>
          <width>25</width>
          <height>25</height>
@@ -2082,9 +2177,16 @@ p, li { white-space: pre-wrap; }
         <rect>
          <x>10</x>
          <y>70</y>
-         <width>71</width>
+         <width>91</width>
          <height>16</height>
         </rect>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>10</pointsize>
+         <weight>75</weight>
+         <bold>true</bold>
+        </font>
        </property>
        <property name="text">
         <string>Testo iniziale</string>
@@ -2093,9 +2195,9 @@ p, li { white-space: pre-wrap; }
       <widget class="QLineEdit" name="testo_out_edit">
        <property name="geometry">
         <rect>
-         <x>220</x>
+         <x>245</x>
          <y>90</y>
-         <width>135</width>
+         <width>150</width>
          <height>25</height>
         </rect>
        </property>
@@ -2108,7 +2210,7 @@ p, li { white-space: pre-wrap; }
       <widget class="QToolButton" name="btn_scegli_testo_out">
        <property name="geometry">
         <rect>
-         <x>357</x>
+         <x>396</x>
          <y>90</y>
          <width>25</width>
          <height>25</height>
@@ -2121,11 +2223,18 @@ p, li { white-space: pre-wrap; }
       <widget class="QLabel" name="label_16">
        <property name="geometry">
         <rect>
-         <x>220</x>
+         <x>245</x>
          <y>70</y>
-         <width>71</width>
+         <width>81</width>
          <height>16</height>
         </rect>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>10</pointsize>
+         <weight>75</weight>
+         <bold>true</bold>
+        </font>
        </property>
        <property name="text">
         <string>Testo finale</string>
@@ -2356,7 +2465,7 @@ p, li { white-space: pre-wrap; }
        </property>
        <property name="geometry">
         <rect>
-         <x>175</x>
+         <x>190</x>
          <y>90</y>
          <width>25</width>
          <height>25</height>
@@ -2376,7 +2485,7 @@ p, li { white-space: pre-wrap; }
        </property>
        <property name="geometry">
         <rect>
-         <x>385</x>
+         <x>425</x>
          <y>90</y>
          <width>25</width>
          <height>25</height>

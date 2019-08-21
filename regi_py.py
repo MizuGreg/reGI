@@ -4,3 +4,6 @@ inseriti solo alcuni comandi necessari all'inizializzazione.
 """
 import regi_db # db clienti, preventivi, infissi
 import regi_ui
+
+if __name__ == "__main__":
+    pass
