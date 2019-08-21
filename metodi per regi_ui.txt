@@ -1,11 +1,11 @@
-from PyQt5.QtGui import QColor
+from PyQt5.QtGui import QColor, QIcon
 import regi_db
     ### IN QUESTO ORDINE!!!
         self.stackedWidget.setCurrentIndex(0)
         palette_preventivi = QtGui.QPalette()
         palette_preventivi.setColor(QtGui.QPalette.Background, QColor("#ccfff0"))
         self.groupBox.setPalette(palette_preventivi)
-        self.tab_schede.setPalette(palette_preventivi)
+        self.tab_dettaglio_totale.setPalette(palette_preventivi)
         palette_clienti = QtGui.QPalette()
         palette_clienti.setColor(QtGui.QPalette.Background, QColor("#ccf0ff"))
         self.groupBox_2.setPalette(palette_clienti)
@@ -17,11 +17,10 @@ import regi_db
 
         self.btn_nuovo_prev.clicked.connect(self.scegli_cliente)
         self.btn_view_anagrafica.clicked.connect(self.view_anagrafica)
-        self.btn_scegli_cliente.clicked.connect(self.scegli_cliente)
-        self.btn_scegli_cliente.clicked.connect(lambda: self.stackedWidget.setCurrentIndex(2))
+        self.btn_scegli_cliente.clicked.connect(self.view_db_clienti)
 # ...
-    def scegli_cliente(self):
-        self.stackedWidget.setCurrentIndex(1)
+    def view_db_clienti(self):
+        self.stackedWidget.setCurrentIndex(2)
         query = regi_db.Cliente.select().dicts()
         for num_riga, cliente in enumerate(query):
             self.tab_clienti.insertRow(num_riga)
@@ -32,7 +31,7 @@ import regi_db
                     dato = "Nessuno"
                 self.tab_clienti.setItem(num_riga, num_colonna-1, QtWidgets.QTableWidgetItem(str(dato)))
     def view_anagrafica(self):
-        self.scegli_cliente()
+        self.view_db_clienti()
         self.label_2.enabled = False
         self.btn_scegli_cliente.enabled = False
     def crea_prev(self):
@@ -46,6 +45,6 @@ import regi_db
 ### ALLA FINE:
     # reGI = QtWidgets.QMainWindow()
     reGI.setWindowTitle("reGI a0.3.0") # non funge
-    reGI.setWindowIcon("icon_0.png") # funge
+    reGI.setWindowIcon(QtGui.QIcon("icon_0.png")) # funge
     # sys.exit(app.exec_())
     regi_db.db.close()
