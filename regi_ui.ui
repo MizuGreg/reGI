@@ -348,6 +348,12 @@
       <property name="alternatingRowColors">
        <bool>true</bool>
       </property>
+      <property name="selectionMode">
+       <enum>QAbstractItemView::SingleSelection</enum>
+      </property>
+      <property name="selectionBehavior">
+       <enum>QAbstractItemView::SelectRows</enum>
+      </property>
       <property name="gridStyle">
        <enum>Qt::DotLine</enum>
       </property>
@@ -2009,7 +2015,7 @@ p, li { white-space: pre-wrap; }
         <string>Nome o ragione sociale</string>
        </property>
       </widget>
-      <widget class="QLineEdit" name="lineEdit_2">
+      <widget class="QLineEdit" name="line_prev_nome">
        <property name="geometry">
         <rect>
          <x>760</x>
@@ -2046,7 +2052,7 @@ p, li { white-space: pre-wrap; }
         <string>Indirizzo</string>
        </property>
       </widget>
-      <widget class="QLineEdit" name="lineEdit_3">
+      <widget class="QLineEdit" name="line_prev_via">
        <property name="geometry">
         <rect>
          <x>975</x>
@@ -2070,7 +2076,7 @@ p, li { white-space: pre-wrap; }
         <bool>true</bool>
        </property>
       </widget>
-      <widget class="QLineEdit" name="lineEdit_4">
+      <widget class="QLineEdit" name="line_prev_cantiere">
        <property name="geometry">
         <rect>
          <x>1230</x>
@@ -2107,7 +2113,7 @@ p, li { white-space: pre-wrap; }
         <string>Indirizzo cantiere</string>
        </property>
       </widget>
-      <widget class="QLineEdit" name="lineEdit_9">
+      <widget class="QLineEdit" name="line_prev_comune">
        <property name="geometry">
         <rect>
          <x>760</x>
@@ -2240,7 +2246,7 @@ p, li { white-space: pre-wrap; }
         <string>Testo finale</string>
        </property>
       </widget>
-      <widget class="QLineEdit" name="lineEdit_12">
+      <widget class="QLineEdit" name="line_prev_tel1">
        <property name="geometry">
         <rect>
          <x>975</x>
@@ -2277,7 +2283,7 @@ p, li { white-space: pre-wrap; }
         <string>Telefono 1</string>
        </property>
       </widget>
-      <widget class="QLineEdit" name="lineEdit_13">
+      <widget class="QLineEdit" name="line_prev_tel2">
        <property name="geometry">
         <rect>
          <x>1135</x>
@@ -2327,7 +2333,7 @@ p, li { white-space: pre-wrap; }
         <string>Email</string>
        </property>
       </widget>
-      <widget class="QLineEdit" name="lineEdit_14">
+      <widget class="QLineEdit" name="line_prev_email">
        <property name="geometry">
         <rect>
          <x>1300</x>

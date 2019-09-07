@@ -15,12 +15,15 @@ import regi_db
         self.groupBox_3.setPalette(palette_progetti)
         self.tree_progetti.setPalette(palette_progetti)
 
-        self.btn_nuovo_prev.clicked.connect(self.scegli_cliente)
+        self.current_cliente = {"cognome": '', "nome": '', "via": '', "comune": "", "tel1": '', "tel2": '', "email": '', "cantiere": ''}
+        self.current_prev = {}
+
+        self.btn_nuovo_prev.clicked.connect(self.view_db_clienti)
         self.btn_view_anagrafica.clicked.connect(self.view_anagrafica)
-        self.btn_scegli_cliente.clicked.connect(self.view_db_clienti)
-# ...
+        self.btn_scegli_cliente.clicked.connect(self.crea_prev)
+
     def view_db_clienti(self):
-        self.stackedWidget.setCurrentIndex(2)
+        self.stackedWidget.setCurrentIndex(1)
         query = regi_db.Cliente.select().dicts()
         for num_riga, cliente in enumerate(query):
             self.tab_clienti.insertRow(num_riga)
@@ -35,13 +38,24 @@ import regi_db
         self.label_2.enabled = False
         self.btn_scegli_cliente.enabled = False
     def crea_prev(self):
-        pass
-        # row = self.products_table.currentRow()
-        # currentproductid = (self.products_table.item(row, 0).text() )
-        # query = session.query(Product).filter(Product.product_id==str(currentproductid)).first()
-        # session.delete(query)
-        # session.commit()
-        # self.products_table.removeRow(row)
+        self.current_cliente = {"cognome": 'Dimaglie', "nome": 'Gregorio', "via": 'via C. Golgi, 33', "comune": 'Manduria (TA)', "tel1": 'Nessuno', "tel2": 'Nessuno', "email": 'Nessuno', "cantiere": 'Nessuno'}
+        if self.tab_clienti.selectedItems() == []:
+            print("Nessun elemento selezionato")
+        else:
+            for current_item, key in zip(self.tab_clienti.selectedItems(), self.current_cliente):
+                    print(current_item.text(), key)
+                    self.current_cliente[key] = current_item.text()
+            print(self.current_cliente)
+            self.stackedWidget.setCurrentIndex(2)
+            self.line_prev_cantiere = self.current_cliente["cantiere"]
+            self.line_prev_comune = "{comune}".format(**self.current_cliente)
+            self.line_prev_email = "{email}".format(**self.current_cliente)
+            self.line_prev_via = "{via}".format(**self.current_cliente)
+            self.line_prev_nome = "{cognome} {nome}".format(**self.current_cliente)
+            self.line_prev_tel1 = "{tel1}".format(**self.current_cliente)
+            self.line_prev_tel2 = "{tel2}".format(**self.current_cliente)
+            self.line_prev_nome1 = "{cognome} {nome}".format(**self.current_cliente)
+
 ### ALLA FINE:
     # reGI = QtWidgets.QMainWindow()
     reGI.setWindowTitle("reGI a0.3.0") # non funge
