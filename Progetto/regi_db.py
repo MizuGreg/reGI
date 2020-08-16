@@ -4,13 +4,17 @@ e apre la connessione (ma non la chiude). Viene chiamato dallo script principale
 """
 import os
 import sys
-from peewee import SqliteDatabase, Model, AutoField, CharField, IntegerField, ForeignKeyField, TextField, DateField
+from peewee import SqliteDatabase, Model, Value, AutoField, CharField, IntegerField, ForeignKeyField, TextField, DateField
 from playhouse.shortcuts import model_to_dict
 from datetime import date
 
 db = SqliteDatabase('regidb_0.db')
 
-class Cliente(Model):
+class BaseModel(Model):
+    class Meta:
+        database = db
+
+class Cliente(BaseModel):
     """
     Questa è una tabella del database, quella che si occupa dei clienti.
     cognome, nome ecc. sono le colonne della tabella.
@@ -26,10 +30,8 @@ class Cliente(Model):
     tel2 = CharField(null = True)
     email = CharField(null = True)
     cantiere = CharField(null = True)
-    class Meta:
-        database = db # questo vuol dire che questo modello usa "regidb_0.db" come database
 
-class Preventivo(Model):
+class Preventivo(BaseModel):
     """
     Questa tabella del database si occupa dei preventivi.
     L'attributo lista_inf è una lista che contiene gli infissi
@@ -43,37 +45,38 @@ class Preventivo(Model):
     po = IntegerField(null = True)
     data = CharField(null = True)
     # key_testo_in = ForeignKeyField(Testo, null = True)
-    testo_in = CharField(null = True) # TextField?
+    testo_in = TextField(null = True)
     # key_testo_out = ForeignKeyField(Testo, null = True)
-    testo_out = CharField(null = True) # TextField?
-    class Meta:
-        database = db
+    testo_fin = TextField(null = True)
 
-class Testo(Model):
+class TestoIn(BaseModel):
     """
-    Tabella che registra i testi iniziali e finali da
+    Tabella che registra solo i testi iniziali da
     inserire nei preventivi.
     """
     id = AutoField()
-    testo = CharField(null = True) # TextField?
-    class Meta:
-        database = db
+    testo = TextField(null = True) # yes but actually no
 
-class Progetto(Model):
+class TestoFin(BaseModel):
+    """
+    Tabella che registra solo i testi finali da
+    inserire nei preventivi.
+    """
+    id = AutoField()
+    testo = TextField(null = True)
+
+class Progetto(BaseModel):
     """
     Tabella che registra i progetti per gli infissi.
     """
     codice = CharField(unique = True, primary_key = True)
-    descrizione = CharField(null = True) # TextField?
-    foto_2d = CharField(null = True)
-    foto_3d = CharField(null = True)
-    materiali = CharField(null = True) # lista dei materiali consentiti
+    descrizione = TextField(null = True)
+    foto_2d = TextField(null = True)
+    foto_3d = TextField(null = True)
+    materiali = CharField(null = True) # lista dei materiali consentiti. usare ", ".split()
     vernici = CharField(null = True)
 
-    class Meta:
-        database = db
-
-class Infisso(Model):
+class Infisso(BaseModel):
     """
     Classe che genera la voce Infisso, che ha alcuni attributi.
     """
@@ -81,7 +84,7 @@ class Infisso(Model):
     prev = ForeignKeyField(Preventivo, backref = "infissi")
     cod_prog = ForeignKeyField(Progetto)
     posizione = CharField(null = True)
-    descrizione = CharField(null = True) # TextField?
+    descrizione = TextField(null = True)
     note = CharField(null = True)
     num_pz = IntegerField(null = True)
     lunghezza = IntegerField(null = True)
@@ -94,12 +97,9 @@ class Infisso(Model):
     prezzo_netto = IntegerField(null = True)
     sconto = IntegerField(null = True)
     iva = IntegerField(null = True)
-    prezzo_lordo = IntegerField(null = True)
-    class Meta:
-        database = db
 
 db.connect()
-db.create_tables([Cliente, Preventivo, Testo, Progetto])
+db.create_tables([Cliente, Preventivo, TestoIn, TestoFin, Progetto, Infisso])
 
 # queste righe servono solo per riempire il DB e testarne il funzionamento
 cliente_prova = Cliente(cognome="Dimaglie", nome="Gregorio", via="via C. Golgi, 33", comune="Manduria (TA)")
