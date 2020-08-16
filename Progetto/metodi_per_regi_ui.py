@@ -114,6 +114,38 @@ class DialogEditCliente(QtWidgets.QDialog):
                             "cantiere": self.edit_cantiere.text()}
             self.accept()
 
+class DialogScegliTesto(QtWidgets.QDialog): 
+    def __init__(self, parent=None):
+        super(QtWidgets.QDialog, self).__init__(parent)
+        Dialog.setObjectName("Dialog")
+        Dialog.resize(700, 500)
+        self.btn_aggiungi = QtWidgets.QPushButton(Dialog)
+        self.btn_aggiungi.setGeometry(QtCore.QRect(10, 450, 80, 41))
+        self.btn_aggiungi.setText("Aggiungi")
+        self.btn_modifica = QtWidgets.QPushButton(Dialog)
+        self.btn_modifica.setGeometry(QtCore.QRect(100, 450, 80, 41))
+        self.btn_modifica.setText("btn_modifica")
+        self.btn_elimina = QtWidgets.QPushButton(Dialog)
+        self.btn_elimina.setGeometry(QtCore.QRect(190, 450, 80, 41))
+        self.btn_elimina.setText("btn_elimina")
+        self.btn_scegli = QtWidgets.QPushButton(Dialog)
+        self.btn_scegli.setGeometry(QtCore.QRect(610, 450, 80, 41))
+        self.btn_scegli.setText("btn_scegli")
+        self.edit_testo_selez = QtWidgets.QTextEdit(Dialog)
+        self.edit_testo_selez.setEnabled(True)
+        self.edit_testo_selez.setGeometry(QtCore.QRect(10, 320, 581, 111))
+        self.edit_testo_selez.setFrameShape(QtWidgets.QFrame.NoFrame)
+        self.edit_testo_selez.setReadOnly(True)
+        self.tab_testi = QtWidgets.QTableWidget(Dialog)
+        self.tab_testi.setGeometry(QtCore.QRect(10, 10, 681, 301))
+        self.tab_testi.setColumnCount(2)
+        self.tab_testi.setRowCount(0)
+        self.tab_testi.setHorizontalHeaderLabels("ID", "Testo")
+        self.tab_testi.horizontalHeader().setStretchLastSection(True)
+        self.btn_fatto = QtWidgets.QPushButton(Dialog)
+        self.btn_fatto.setGeometry(QtCore.QRect(610, 350, 80, 41))
+        self.btn_fatto.setText("Fatto")
+
 ### IN QUESTO ORDINE
 
     ###
