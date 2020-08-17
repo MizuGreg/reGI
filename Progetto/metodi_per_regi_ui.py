@@ -267,7 +267,7 @@ class DialogScegliTesto(QtWidgets.QDialog):
 
 ### IN QUESTO ORDINE
 
-    # <> <> <> <> <> <> <> <> <> <> #
+    # <> <> <> <> <> <> <> <> <> <> <> <> <> <> <> <> <> <> <> <> #
 
         self.stackedWidget.setCurrentIndex(0)
         self.current_cliente = {"id": 0, "cognome": "", "nome": "", "via": "", "comune": "", "tel1": "", "tel2": "", "email": "", "cantiere": ""}
@@ -297,6 +297,7 @@ class DialogScegliTesto(QtWidgets.QDialog):
         self.btn_scegli_testo_fin.clicked.connect(self.scegli_testo_fin)
         self.btn_scegli_prog.clicked.connect(self.scegli_prog)
         self.btn_deduci_descr.clicked.connect(self.deduci_descr)
+        self.listwidget_infissi.itemClicked.connect(self.load_infisso)
 
         self.modello_tree_progetti = QtGui.QStandardItemModel()
         self.tree_progetti.setModel(self.modello_tree_progetti)
@@ -490,6 +491,15 @@ class DialogScegliTesto(QtWidgets.QDialog):
         else:
             self.current_prev["testo_fin"] = ultimo_prev["testo_fin"]
         self.edit_testo_fin.setText(self.current_prev["testo_fin"])
+        
+    def deduci_nick_cliente(self):
+        pass # wip
+
+    def scegli_progetto(self):
+        pass # wip
+
+    def deduci_descr(self):
+        pass # wip
 
     def crea_prev(self):
         if self.tab_clienti.currentRow() == -1:
@@ -517,7 +527,7 @@ class DialogScegliTesto(QtWidgets.QDialog):
         self.line_prev_tel2.setText(cliente["tel2"])
         self.line_prev_email.setText(cliente["email"])
 
-        self.listwidget_inf.clear()
+        self.listwidget_infissi.clear()
         self.lista_id_inf = []
         query = Infisso.select().where(Infisso.prev == prev.id)
         if query.dicts() != None:
@@ -525,7 +535,7 @@ class DialogScegliTesto(QtWidgets.QDialog):
                 self.lista_id_inf.append(inf["id"])
                 if inf["posizione"] != ("" or None):
                     posiz = " - %s" %(inf["posizione"].upper())
-                self.listwidget_inf.addItem("SERRAMENTO %d [%s]%s" %(num_riga, inf["codice"], posiz))
+                self.listwidget_infissi.addItem("SERRAMENTO %d [%s]%s" %(num_riga, inf["codice"], posiz))
                 # aggiunta pixmap e thumbnail a ogni riga
         self.view_db_progetti()
 
@@ -546,20 +556,23 @@ class DialogScegliTesto(QtWidgets.QDialog):
                     popola_tree(nodo_figlio_1, nipote)
 
     def load_infisso(self):
-        id_infisso = self.lista_id_inf[self.listwidget_inf.currentRow()]
+        id_infisso = self.lista_id_inf[self.listwidget_infissi.currentRow()]
         self.current_infisso = Infisso.get(Infisso.id == id_infisso)
         self.edit_cod_prog.setText(self.current_infisso["cod_prog"])
         self.edit_posiz.setText(self.current_infisso["posizione"])
         self.edit_descr.setText(self.current_infisso["descrizione"])
         self.edit_note_descr.setText(self.current_infisso["note"])
         # impostare foto 2d e 3d
-        # wip
+        self.spin_num_pz.setValue(self.current_infisso["num_pz"])
+        self.spin_lunghezza.setValue(self.current_infisso["lunghezza"])
+        self.spin_altezza.setValue(self.current_infisso["altezza"])
+        self.spin_spessore.setValue(self.current_infisso["spessore"])
 
 
     def salva_prev(self):
         self.popup_salva_prev()
 
-    # <> <> <> <> <> <> <> <> <> <> #
+    # <> <> <> <> <> <> <> <> <> <> <> <> <> <> <> <> <> <> <> <> #
             
 ### ALLA FINE
 
@@ -567,7 +580,7 @@ class DialogScegliTesto(QtWidgets.QDialog):
     app = QtWidgets.QApplication(sys.argv)
     reGI = QtWidgets.QMainWindow()
     reGI.setWindowTitle("reGI a0.3.X")
-    reGI.setWindowIcon(QtGui.QIcon("../Icone/icon_0.png"))
+    reGI.setWindowIcon(QtGui.QIcon("../Risorse/icon_0.png"))
     ui = Ui_reGI()
     ui.setupUi(reGI)
     reGI.show()

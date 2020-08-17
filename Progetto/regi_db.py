@@ -75,6 +75,7 @@ class Progetto(BaseModel):
     per costruire gli infissi.
     """
     codice = CharField(unique = True, primary_key = True)
+    genitore = ForeignKeyField("self", null = True, backref = "figli")
     nome = CharField(null = True)
     descrizione = TextField(null = True)
     foto_2d = TextField(null = True)
@@ -116,8 +117,11 @@ def popola_preventivi():
     pass
 
 def popola_progetti():
-    pass
+    Progetto.create(codice = "BA", genitore = None, nome = "Sistema base", descrizione = "")
+    Progetto.create(codice = "AS", genitore = "BA", nome = "Alzante scorrevole", descrizione = "")
+    Progetto.create(codice = "HS5--------------------------------------------------", genitore = "AS", nome = "Alzante scorrevole 5 ante", descrizione = "Alzante scorrevole a cinque ante.---------------------------------------------------------")
+    Progetto.create(codice = "LA", genitore = None, nome = "Legno/alluminio", descrizione = "")
 
 popola_clienti()
-# popola_preventivi()
+popola_preventivi()
 # popola_progetti()

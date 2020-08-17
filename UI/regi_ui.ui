@@ -624,7 +624,7 @@
        <attribute name="title">
         <string>Dettaglio</string>
        </attribute>
-       <widget class="QListWidget" name="listwidget_inf">
+       <widget class="QListWidget" name="listwidget_infissi">
         <property name="geometry">
          <rect>
           <x>10</x>
@@ -767,7 +767,7 @@
          <string>Note</string>
         </property>
        </widget>
-       <widget class="QToolButton" name="btn_scegli_prog">
+       <widget class="QToolButton" name="btn_scegli_progetto">
         <property name="geometry">
          <rect>
           <x>650</x>
@@ -1402,9 +1402,6 @@ p, li { white-space: pre-wrap; }
             <property name="readOnly">
              <bool>true</bool>
             </property>
-            <property name="placeholderText">
-             <string/>
-            </property>
            </widget>
            <widget class="QLineEdit" name="edit_cod_prog_2">
             <property name="enabled">
@@ -1426,9 +1423,6 @@ p, li { white-space: pre-wrap; }
             </property>
             <property name="readOnly">
              <bool>true</bool>
-            </property>
-            <property name="placeholderText">
-             <string/>
             </property>
            </widget>
            <widget class="QLabel" name="label_13">
@@ -1510,9 +1504,6 @@ p, li { white-space: pre-wrap; }
             <property name="readOnly">
              <bool>true</bool>
             </property>
-            <property name="placeholderText">
-             <string/>
-            </property>
            </widget>
            <widget class="QRadioButton" name="radio_sconto">
             <property name="geometry">
@@ -1538,6 +1529,9 @@ p, li { white-space: pre-wrap; }
             </property>
            </widget>
            <widget class="QRadioButton" name="radio_sconto_percent">
+            <property name="enabled">
+             <bool>false</bool>
+            </property>
             <property name="geometry">
              <rect>
               <x>5</x>
@@ -1583,9 +1577,6 @@ p, li { white-space: pre-wrap; }
             </property>
             <property name="readOnly">
              <bool>true</bool>
-            </property>
-            <property name="placeholderText">
-             <string/>
             </property>
            </widget>
           </widget>
@@ -1643,14 +1634,14 @@ p, li { white-space: pre-wrap; }
             <property name="text">
              <string>22</string>
             </property>
+            <property name="frame">
+             <bool>false</bool>
+            </property>
             <property name="alignment">
              <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
             </property>
             <property name="readOnly">
              <bool>true</bool>
-            </property>
-            <property name="placeholderText">
-             <string/>
             </property>
            </widget>
           </widget>
@@ -1741,7 +1732,7 @@ p, li { white-space: pre-wrap; }
              <string>N. pezzi</string>
             </property>
            </widget>
-           <widget class="QSpinBox" name="spin_pezzi">
+           <widget class="QSpinBox" name="spin_num_pz">
             <property name="geometry">
              <rect>
               <x>140</x>
@@ -1845,7 +1836,7 @@ p, li { white-space: pre-wrap; }
              <string>Spessore</string>
             </property>
            </widget>
-           <widget class="QSpinBox" name="spin_l">
+           <widget class="QSpinBox" name="spin_lunghezza">
             <property name="geometry">
              <rect>
               <x>140</x>
@@ -1870,7 +1861,7 @@ p, li { white-space: pre-wrap; }
              <number>10</number>
             </property>
            </widget>
-           <widget class="QSpinBox" name="spin_h">
+           <widget class="QSpinBox" name="spin_altezza">
             <property name="geometry">
              <rect>
               <x>140</x>
@@ -1903,7 +1894,7 @@ p, li { white-space: pre-wrap; }
              <number>10</number>
             </property>
            </widget>
-           <widget class="QSpinBox" name="spin_s">
+           <widget class="QSpinBox" name="spin_spessore">
             <property name="enabled">
              <bool>false</bool>
             </property>
@@ -2023,9 +2014,6 @@ p, li { white-space: pre-wrap; }
               <bold>false</bold>
              </font>
             </property>
-            <property name="frame">
-             <bool>true</bool>
-            </property>
             <item>
              <property name="text">
               <string>Legno</string>
@@ -2126,9 +2114,6 @@ p, li { white-space: pre-wrap; }
         </layout>
        </widget>
        <widget class="QTreeView" name="tree_progetti">
-        <property name="enabled">
-         <bool>false</bool>
-        </property>
         <property name="geometry">
          <rect>
           <x>430</x>
@@ -2137,6 +2122,21 @@ p, li { white-space: pre-wrap; }
           <height>380</height>
          </rect>
         </property>
+        <property name="indentation">
+         <number>15</number>
+        </property>
+        <property name="uniformRowHeights">
+         <bool>true</bool>
+        </property>
+        <property name="animated">
+         <bool>true</bool>
+        </property>
+        <attribute name="headerCascadingSectionResizes">
+         <bool>true</bool>
+        </attribute>
+        <attribute name="headerDefaultSectionSize">
+         <number>200</number>
+        </attribute>
        </widget>
       </widget>
       <widget class="QWidget" name="scheda_totale">
@@ -2993,7 +2993,7 @@ d'ordine</string>
      <x>0</x>
      <y>0</y>
      <width>1920</width>
-     <height>21</height>
+     <height>20</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuNuovo">
