@@ -129,33 +129,36 @@ class DialogScegliTesto(QtWidgets.QDialog):
         super(QtWidgets.QDialog, self).__init__(parent)
         self.setWindowTitle("Scegli il testo iniziale/finale")
         self.resize(700, 500)
-        self.centralWidget = QtWidgets.QFrame()
-        self.btn_aggiungi = QtWidgets.QPushButton(self.centralWidget)
+        self.btn_aggiungi = QtWidgets.QPushButton()
+        self.stack.addWidget(self.btn_aggiungi)
         self.btn_aggiungi.setGeometry(QtCore.QRect(10, 450, 80, 41))
         self.btn_aggiungi.setText("Aggiungi")
-        self.btn_modifica = QtWidgets.QPushButton(self.centralWidget)
+        self.btn_modifica = QtWidgets.QPushButton()
         self.btn_modifica.setGeometry(QtCore.QRect(100, 450, 80, 41))
         self.btn_modifica.setText("btn_modifica")
-        self.btn_elimina = QtWidgets.QPushButton(self.centralWidget)
+        self.btn_elimina = QtWidgets.QPushButton()
         self.btn_elimina.setGeometry(QtCore.QRect(190, 450, 80, 41))
         self.btn_elimina.setText("btn_elimina")
-        self.btn_scegli = QtWidgets.QPushButton(self.centralWidget)
+        self.btn_scegli = QtWidgets.QPushButton()
         self.btn_scegli.setGeometry(QtCore.QRect(610, 450, 80, 41))
         self.btn_scegli.setText("btn_scegli")
-        self.edit_testo_selez = QtWidgets.QTextEdit(self.centralWidget)
+        self.edit_testo_selez = QtWidgets.QTextEdit()
         self.edit_testo_selez.setEnabled(True)
         self.edit_testo_selez.setGeometry(QtCore.QRect(10, 320, 581, 111))
         self.edit_testo_selez.setFrameShape(QtWidgets.QFrame.NoFrame)
         self.edit_testo_selez.setReadOnly(True)
-        self.tab_testi = QtWidgets.QTableWidget(self.centralWidget)
+        self.tab_testi = QtWidgets.QTableWidget()
         self.tab_testi.setGeometry(QtCore.QRect(10, 10, 681, 301))
         self.tab_testi.setColumnCount(2)
         self.tab_testi.setRowCount(0)
-        self.tab_testi.setHorizontalHeaderLabels("ID", "Testo")
-        self.tab_testi.horizontalHeader(self.centralWidget).setStretchLastSection(True)
-        self.btn_fatto = QtWidgets.QPushButton(self.centralWidget)
+        self.tab_testi.setHorizontalHeaderLabels(["ID", "Testo"])
+        self.tab_testi.horizontalHeader().setStretchLastSection(True)
+        self.btn_fatto = QtWidgets.QPushButton()
         self.btn_fatto.setGeometry(QtCore.QRect(610, 350, 80, 41))
         self.btn_fatto.setText("Fatto")
+
+        # parte del layout mancante, finestra per ora invisibile
+        # wip
 
         self.operazione = ""
         self.popola_tabella()
@@ -295,9 +298,9 @@ class DialogScegliTesto(QtWidgets.QDialog):
         self.btn_scegli_testo_in.clicked.connect(self.scegli_testo_in)
         self.btn_deduci_testo_fin.clicked.connect(self.deduci_testo_fin)
         self.btn_scegli_testo_fin.clicked.connect(self.scegli_testo_fin)
-        self.btn_scegli_prog.clicked.connect(self.scegli_prog)
+        self.btn_scegli_prog.clicked.connect(self.scegli_progetto)
         self.btn_deduci_descr.clicked.connect(self.deduci_descr)
-        self.listwidget_infissi.itemClicked.connect(self.load_infisso)
+        self.listwidget_inf.itemClicked.connect(self.load_infisso)
 
         self.modello_tree_progetti = QtGui.QStandardItemModel()
         self.tree_progetti.setModel(self.modello_tree_progetti)
@@ -527,36 +530,36 @@ class DialogScegliTesto(QtWidgets.QDialog):
         self.line_prev_tel2.setText(cliente["tel2"])
         self.line_prev_email.setText(cliente["email"])
 
-        self.listwidget_infissi.clear()
+        self.listwidget_inf.clear()
         self.lista_id_inf = []
-        query = Infisso.select().where(Infisso.prev == prev.id)
+        query = Infisso.select().where(Infisso.prev == prev["id"])
         if query.dicts() != None:
             for num_riga, inf in enumerate(query.dicts()):
                 self.lista_id_inf.append(inf["id"])
                 if inf["posizione"] != ("" or None):
                     posiz = " - %s" %(inf["posizione"].upper())
-                self.listwidget_infissi.addItem("SERRAMENTO %d [%s]%s" %(num_riga, inf["codice"], posiz))
+                self.listwidget_inf.addItem("SERRAMENTO %d [%s]%s" %(num_riga, inf["codice"], posiz))
                 # aggiunta pixmap e thumbnail a ogni riga
         self.view_db_progetti()
 
+    def popola_tree(self, nodo_padre, figlio):
+        nodo_figlio_1 = TreeItem(figlio.codice, 12, color = QtGui.QColor(100, 0, 0))
+        nodo_figlio_2 = TreeItem(figlio.descrizione, 12, color = QtGui.QColor(0, 0, 0))
+        nodo_padre.appendRow([nodo_figlio_1, nodo_figlio_2])
+        if figlio.figli.dicts() != None:
+            for nipote in figlio.figli:
+                self.popola_tree(nodo_figlio_1, nipote)
+    
     def view_db_progetti(self):
         query = Progetto.select()
         casi_base = query.where(Progetto.genitore == None)
         if casi_base.dicts() != None:
             # creazione del root_node già fatta
             for caso_base in casi_base:
-                popola_tree(self.root_node, caso_base)
-        def popola_tree(nodo_padre, figlio):
-            nodo_figlio_1 = TreeItem(figlio.codice, 12, color = QtGui.QColor(100, 0, 0))
-            nodo_figlio_2 = TreeItem(figlio.descrizione, 12, color = QtGui.QColor(0, 0, 0))
-            result = nodo_padre.appendRow([nodo_figlio_1, nodo_figlio_2])
-            print(result)
-            if figlio.figli.dicts() != None:
-                for nipote in figlio.figli:
-                    popola_tree(nodo_figlio_1, nipote)
+                self.popola_tree(self.root_node, caso_base)
 
     def load_infisso(self):
-        id_infisso = self.lista_id_inf[self.listwidget_infissi.currentRow()]
+        id_infisso = self.lista_id_inf[self.listwidget_inf.currentRow()]
         self.current_infisso = Infisso.get(Infisso.id == id_infisso)
         self.edit_cod_prog.setText(self.current_infisso["cod_prog"])
         self.edit_posiz.setText(self.current_infisso["posizione"])
