@@ -1,30 +1,35 @@
 """
 Script Python che genera il db, lo costruisce ad hoc
-e apre la connessione (ma non la chiude). Viene chiamato dallo script principale.
+e apre la connessione con il db (ma non la chiude).
+Viene chiamato dallo script principale.
+Tutti i parametri null = True dovranno diventare obsoleti.
 """
 import os
 import sys
-from peewee import SqliteDatabase, Model, Value, AutoField, CharField, IntegerField, ForeignKeyField, TextField, DateField
+from peewee import SqliteDatabase, Model, Value, AutoField, CharField, IntegerField, ForeignKeyField, TextField, FloatField
 from playhouse.shortcuts import model_to_dict
 from datetime import date
 
 db = SqliteDatabase('regidb_0.db')
 
 class BaseModel(Model):
+    """
+    Tabella base del database. La classe Meta indica che regidb_0.db
+    viene usato come database.
+    """
     class Meta:
         database = db
 
 class Cliente(BaseModel):
     """
-    Questa è una tabella del database, quella che si occupa dei clienti.
+    Tabella del database che si occupa dei clienti.
     cognome, nome ecc. sono le colonne della tabella.
-    null=True vuol dire che sono accettati campi vuoti.
-    la classe Meta indica che regidb_0.db viene usato come database.
+    null = True vuol dire che sono accettati campi vuoti.
     """
     id = AutoField()
-    cognome = CharField() # colonne della tabella
+    cognome = CharField()
     nome = CharField()
-    via = CharField(null = True) # vuol dire che posso lasciare il campo vuoto
+    via = CharField(null = True)
     comune = CharField(null = True)
     tel1 = CharField(null = True)
     tel2 = CharField(null = True)
@@ -33,17 +38,16 @@ class Cliente(BaseModel):
 
 class Preventivo(BaseModel):
     """
-    Questa tabella del database si occupa dei preventivi.
-    L'attributo lista_inf è una lista che contiene gli infissi
-    del preventivo.
+    Tabella del database che custodisce tutti i preventivi.
+    cliente è una foreign key che punta alla tabella Cliente.
     """
     id = AutoField()
     cliente = ForeignKeyField(Cliente, backref = "preventivi")
     nick_cliente = CharField(null = True)
-    anno = IntegerField(null = True, default = date.today().year)
+    anno = IntegerField(null = True) # default = date.today().year)
     so = IntegerField(null = True)
     po = IntegerField(null = True)
-    data = CharField(null = True)
+    data = CharField(null = True) # default = date.today().strftime("%Y-%m-%d"))
     # key_testo_in = ForeignKeyField(Testo, null = True)
     testo_in = TextField(null = True)
     # key_testo_out = ForeignKeyField(Testo, null = True)
@@ -51,29 +55,31 @@ class Preventivo(BaseModel):
 
 class TestoIn(BaseModel):
     """
-    Tabella che registra solo i testi iniziali da
-    inserire nei preventivi.
+    Tabella che registra solo i testi iniziali da inserire
+    nei preventivi.
     """
     id = AutoField()
-    testo = TextField(null = True) # yes but actually no
+    testo = TextField(null = True)
 
 class TestoFin(BaseModel):
     """
-    Tabella che registra solo i testi finali da
-    inserire nei preventivi.
+    Tabella che registra solo i testi finali da inserire
+    nei preventivi.
     """
     id = AutoField()
     testo = TextField(null = True)
 
 class Progetto(BaseModel):
     """
-    Tabella che registra i progetti per gli infissi.
+    Tabella che registra i progetti base da cui partire
+    per costruire gli infissi.
     """
     codice = CharField(unique = True, primary_key = True)
+    nome = CharField(null = True)
     descrizione = TextField(null = True)
     foto_2d = TextField(null = True)
     foto_3d = TextField(null = True)
-    materiali = CharField(null = True) # lista dei materiali consentiti. usare ", ".split()
+    materiali = CharField(null = True) # lista dei materiali consentiti. Usare "; ".split()
     vernici = CharField(null = True)
 
 class Infisso(BaseModel):
@@ -92,17 +98,26 @@ class Infisso(BaseModel):
     spessore = IntegerField(null = True)
     materiale = CharField(null = True)
     vernice = CharField(null = True)
-    var3 = CharField(null = True)
     note_varianti = CharField(null = True)
     prezzo_netto = IntegerField(null = True)
-    sconto = IntegerField(null = True)
-    iva = IntegerField(null = True)
+    sconto = FloatField(null = True)
 
 db.connect()
 db.create_tables([Cliente, Preventivo, TestoIn, TestoFin, Progetto, Infisso])
 
-# queste righe servono solo per riempire il DB e testarne il funzionamento
-cliente_prova = Cliente(cognome="Dimaglie", nome="Gregorio", via="via C. Golgi, 33", comune="Manduria (TA)")
-prev_prova = Preventivo(cliente=cliente_prova, num_progr="2/2020")
-cliente_prova.save()
-prev_prova.save()
+# Queste righe servono solo per riempire il DB e testarne il funzionamento.
+
+def popola_clienti():
+    Cliente.create(cognome = "Dimaglie", nome = "Gregorio",
+                                via = "via C. Golgi, 33", comune = "Manduria (TA)",
+                                tel1 = "3294633960")
+
+def popola_preventivi():
+    pass
+
+def popola_progetti():
+    pass
+
+popola_clienti()
+# popola_preventivi()
+# popola_progetti()
