@@ -1,0 +1,9 @@
+.vscode/
+__pychache__/
+Lib/
+Progetto/__pycache__
+Progetto/prova.py
+Progetto/regidb_0.db
+Progetto/UI/__pycache__
+Scripts/
+pyenv.cfg
