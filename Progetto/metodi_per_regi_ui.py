@@ -127,38 +127,77 @@ class DialogEditCliente(QtWidgets.QDialog):
 class DialogScegliTesto(QtWidgets.QDialog): 
     def __init__(self, parent = None):
         super(QtWidgets.QDialog, self).__init__(parent)
-        self.setWindowTitle("Scegli il testo iniziale/finale")
-        self.resize(700, 500)
-        self.btn_aggiungi = QtWidgets.QPushButton()
-        self.stack.addWidget(self.btn_aggiungi)
-        self.btn_aggiungi.setGeometry(QtCore.QRect(10, 450, 80, 41))
-        self.btn_aggiungi.setText("Aggiungi")
-        self.btn_modifica = QtWidgets.QPushButton()
-        self.btn_modifica.setGeometry(QtCore.QRect(100, 450, 80, 41))
-        self.btn_modifica.setText("btn_modifica")
-        self.btn_elimina = QtWidgets.QPushButton()
-        self.btn_elimina.setGeometry(QtCore.QRect(190, 450, 80, 41))
-        self.btn_elimina.setText("btn_elimina")
-        self.btn_scegli = QtWidgets.QPushButton()
-        self.btn_scegli.setGeometry(QtCore.QRect(610, 450, 80, 41))
-        self.btn_scegli.setText("btn_scegli")
-        self.edit_testo_selez = QtWidgets.QTextEdit()
-        self.edit_testo_selez.setEnabled(True)
-        self.edit_testo_selez.setGeometry(QtCore.QRect(10, 320, 581, 111))
-        self.edit_testo_selez.setFrameShape(QtWidgets.QFrame.NoFrame)
-        self.edit_testo_selez.setReadOnly(True)
-        self.tab_testi = QtWidgets.QTableWidget()
-        self.tab_testi.setGeometry(QtCore.QRect(10, 10, 681, 301))
+
+        self.verticalLayoutWidget = QtWidgets.QWidget(self)
+        self.verticalLayoutWidget.setGeometry(QtCore.QRect(10, 9, 681, 481))
+        self.verticalLayout = QtWidgets.QVBoxLayout(self.verticalLayoutWidget)
+        self.verticalLayout.setContentsMargins(0, 0, 0, 0)
+        self.verticalLayout.setSpacing(5)
+        self.tab_testi = QtWidgets.QTableWidget(self.verticalLayoutWidget)
+        self.tab_testi.setMinimumSize(QtCore.QSize(0, 250))
         self.tab_testi.setColumnCount(2)
         self.tab_testi.setRowCount(0)
         self.tab_testi.setHorizontalHeaderLabels(["ID", "Testo"])
         self.tab_testi.horizontalHeader().setStretchLastSection(True)
-        self.btn_fatto = QtWidgets.QPushButton()
-        self.btn_fatto.setGeometry(QtCore.QRect(610, 350, 80, 41))
+        self.verticalLayout.addWidget(self.tab_testi)
+        self.horizontalLayout_2 = QtWidgets.QHBoxLayout()
+        self.edit_testo_selez = QtWidgets.QTextEdit(self.verticalLayoutWidget)
+        self.edit_testo_selez.setEnabled(True)
+        self.edit_testo_selez.setFrameShape(QtWidgets.QFrame.NoFrame)
+        self.edit_testo_selez.setReadOnly(True)
+        self.horizontalLayout_2.addWidget(self.edit_testo_selez)
+        self.btn_fatto = QtWidgets.QPushButton(self.verticalLayoutWidget)
         self.btn_fatto.setText("Fatto")
-
-        # parte del layout mancante, finestra per ora invisibile
-        # wip
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.btn_fatto.sizePolicy().hasHeightForWidth())
+        self.btn_fatto.setSizePolicy(sizePolicy)
+        self.btn_fatto.setMinimumSize(QtCore.QSize(80, 40))
+        self.horizontalLayout_2.addWidget(self.btn_fatto)
+        self.verticalLayout.addLayout(self.horizontalLayout_2)
+        spacerItem = QtWidgets.QSpacerItem(20, 20, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Fixed)
+        self.verticalLayout.addItem(spacerItem)
+        self.horizontalLayout = QtWidgets.QHBoxLayout()
+        self.btn_aggiungi = QtWidgets.QPushButton(self.verticalLayoutWidget)
+        self.btn_aggiungi.setText("Aggiungi")
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.btn_aggiungi.sizePolicy().hasHeightForWidth())
+        self.btn_aggiungi.setSizePolicy(sizePolicy)
+        self.btn_aggiungi.setMinimumSize(QtCore.QSize(80, 40))
+        self.horizontalLayout.addWidget(self.btn_aggiungi)
+        self.btn_modifica = QtWidgets.QPushButton(self.verticalLayoutWidget)
+        self.btn_modifica.setText("Modifica")
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.btn_modifica.sizePolicy().hasHeightForWidth())
+        self.btn_modifica.setSizePolicy(sizePolicy)
+        self.btn_modifica.setMinimumSize(QtCore.QSize(80, 40))
+        self.horizontalLayout.addWidget(self.btn_modifica)
+        self.btn_elimina = QtWidgets.QPushButton(self.verticalLayoutWidget)
+        self.btn_elimina.setText("Elimina")
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.btn_elimina.sizePolicy().hasHeightForWidth())
+        self.btn_elimina.setSizePolicy(sizePolicy)
+        self.btn_elimina.setMinimumSize(QtCore.QSize(80, 40))
+        self.horizontalLayout.addWidget(self.btn_elimina)
+        spacerItem1 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
+        self.horizontalLayout.addItem(spacerItem1)
+        self.btn_scegli = QtWidgets.QPushButton(self.verticalLayoutWidget)
+        self.btn_scegli.setText("Scegli")
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.btn_scegli.sizePolicy().hasHeightForWidth())
+        self.btn_scegli.setSizePolicy(sizePolicy)
+        self.btn_scegli.setMinimumSize(QtCore.QSize(80, 40))
+        self.horizontalLayout.addWidget(self.btn_scegli)
+        self.verticalLayout.addLayout(self.horizontalLayout)
 
         self.operazione = ""
         self.popola_tabella()
@@ -274,12 +313,11 @@ class DialogScegliTesto(QtWidgets.QDialog):
 
         self.stackedWidget.setCurrentIndex(0)
         self.current_cliente = {"id": 0, "cognome": "", "nome": "", "via": "", "comune": "", "tel1": "", "tel2": "", "email": "", "cantiere": ""}
-        self.current_prev = {"id": 0, "cliente": 0, "nick_cliente": "", "anno": 0, "so": 0, "po": 0, "data": "", "testo_in": "", "testo_out": ""}
-        self.lista_id_inf = []
-        self.current_infisso = {"id": 0, "prev": 0, "cod_prog": 0, "posizione": "", "descrizione": "", "note": "", "num_pz": 0, "lunghezza": 0,
-                                "altezza": 0, "spessore": 0, "materiale": "", "vernice": "", "note_varianti": "", "prezzo_netto": 0,
-                                "sconto": 0.0}
-        
+        self.current_prev = {"id": 0, "cliente": 0, "nick_cliente": "", "anno": 0, "so": 0, "po": 0, "data": "", "testo_in": "", "testo_out": "",
+                                "iva": 0.0}
+        self.lista_infissi = []
+        self.safe_exit = False
+
         self.btn_nuovo_prev.clicked.connect(self.view_db_clienti)
         self.btn_view_anagrafica.clicked.connect(self.view_anagrafica)
         self.btn_sc_agg_cliente.clicked.connect(self.sc_agg_cliente)
@@ -298,9 +336,9 @@ class DialogScegliTesto(QtWidgets.QDialog):
         self.btn_scegli_testo_in.clicked.connect(self.scegli_testo_in)
         self.btn_deduci_testo_fin.clicked.connect(self.deduci_testo_fin)
         self.btn_scegli_testo_fin.clicked.connect(self.scegli_testo_fin)
-        self.btn_scegli_prog.clicked.connect(self.scegli_progetto)
+        self.btn_scegli_progetto.clicked.connect(self.scegli_progetto)
         self.btn_deduci_descr.clicked.connect(self.deduci_descr)
-        self.listwidget_inf.itemClicked.connect(self.load_infisso)
+        self.listwidget_infissi.itemClicked.connect(self.load_infisso)
 
         self.modello_tree_progetti = QtGui.QStandardItemModel()
         self.tree_progetti.setModel(self.modello_tree_progetti)
@@ -381,7 +419,7 @@ class DialogScegliTesto(QtWidgets.QDialog):
         popup.setStandardButtons(QtWidgets.QMessageBox.Ok | QtWidgets.QMessageBox.Cancel)
         popup.setDefaultButton(QtWidgets.QMessageBox.Cancel)
         popup.buttonClicked.connect(self.show_popup_btn)
-        popup.exec_()
+        x = popup.exec_()
     
     def show_popup_btn(self, item):
         self.bool_conferma = item.text() == "OK"
@@ -530,21 +568,21 @@ class DialogScegliTesto(QtWidgets.QDialog):
         self.line_prev_tel2.setText(cliente["tel2"])
         self.line_prev_email.setText(cliente["email"])
 
-        self.listwidget_inf.clear()
-        self.lista_id_inf = []
+        self.listwidget_infissi.clear()
+        self.lista_infissi = []
         query = Infisso.select().where(Infisso.prev == prev["id"])
         if query.dicts() != None:
             for num_riga, inf in enumerate(query.dicts()):
-                self.lista_id_inf.append(inf["id"])
+                self.lista_infissi.append(inf)
                 if inf["posizione"] != ("" or None):
                     posiz = " - %s" %(inf["posizione"].upper())
-                self.listwidget_inf.addItem("SERRAMENTO %d [%s]%s" %(num_riga, inf["codice"], posiz))
+                self.listwidget_infissi.addItem("SERRAMENTO %d [%s]%s" %(num_riga, inf["codice"], posiz))
                 # aggiunta pixmap e thumbnail a ogni riga
         self.view_db_progetti()
 
     def popola_tree(self, nodo_padre, figlio):
         nodo_figlio_1 = TreeItem(figlio.codice, 12, color = QtGui.QColor(100, 0, 0))
-        nodo_figlio_2 = TreeItem(figlio.descrizione, 12, color = QtGui.QColor(0, 0, 0))
+        nodo_figlio_2 = TreeItem(figlio.descrizione, 12, color = QtGui.QColor(0, 0, 0)) # wip
         nodo_padre.appendRow([nodo_figlio_1, nodo_figlio_2])
         if figlio.figli.dicts() != None:
             for nipote in figlio.figli:
@@ -554,26 +592,76 @@ class DialogScegliTesto(QtWidgets.QDialog):
         query = Progetto.select()
         casi_base = query.where(Progetto.genitore == None)
         if casi_base.dicts() != None:
-            # creazione del root_node già fatta
             for caso_base in casi_base:
                 self.popola_tree(self.root_node, caso_base)
 
-    def load_infisso(self):
-        id_infisso = self.lista_id_inf[self.listwidget_inf.currentRow()]
-        self.current_infisso = Infisso.get(Infisso.id == id_infisso)
-        self.edit_cod_prog.setText(self.current_infisso["cod_prog"])
-        self.edit_posiz.setText(self.current_infisso["posizione"])
-        self.edit_descr.setText(self.current_infisso["descrizione"])
-        self.edit_note_descr.setText(self.current_infisso["note"])
-        # impostare foto 2d e 3d
-        self.spin_num_pz.setValue(self.current_infisso["num_pz"])
-        self.spin_lunghezza.setValue(self.current_infisso["lunghezza"])
-        self.spin_altezza.setValue(self.current_infisso["altezza"])
-        self.spin_spessore.setValue(self.current_infisso["spessore"])
+    def load_progetto_da_edit(self):
+        codice_inserito = self.edit_cod_prog.text()
+        progetto = Progetto.get_or_none(Progetto.codice == codice_inserito)
+        if progetto != None:
+            # wip
+            self.edit_descriz.setText(progetto.descrizione)
+            # foto 2d e 3d
+            self.combo_materiale.clear()
+            self.combo_materiale.addItems()
 
+
+    def load_progetto_da_dialog(self):
+        pass
+
+    def calcola_dimensioni(self):
+        pass
+
+    def calcola_superficie(self):
+        pass
+    
+    def calcola_prezzo_listino(self):
+        pass
+
+    def load_infisso(self):
+        current_inf = self.lista_infissi[self.indice_lista[self.listwidget_infissi.currentRow()]]
+        self.edit_cod_prog.setText(current_inf["cod_prog"])
+        self.edit_posiz.setText(current_inf["posiz"])
+        self.edit_descriz.setText(current_inf["descriz"])
+        self.edit_note_descriz.setText(current_inf["note_descriz"])
+        # caricare foto 2d e 3d
+
+        self.spin_num_pz.setValue(current_inf["num_pz"])
+        self.line_num_pz_1.setText(str(current_inf["num_pz"]))
+        self.line_num_pz_2.setText(str(current_inf["num_pz"]))
+        self.spin_lunghezza.setValue(current_inf["lunghezza"])
+        self.spin_altezza.setValue(current_inf["altezza"])
+        self.spin_spessore.setValue(current_inf["spessore"])
+        self.combo_materiale.setCurrentIndex(self.combo_materiale.findText(current_inf["materiale"]))
+        self.combo_vernice.setCurrentIndex(self.combo_vernice.findText(current_inf["materiale"]))
+        self.edit_note_varianti.setPlainText(current_inf["note_varianti"])
+
+        if current_inf["prezzo_listino"] > 0:
+            self.radio_prezzo_listino.toggle()
+        else:
+            self.radio_prezzo_custom.toggle()        
+        if current_inf["sconto"] >= 1:
+            self.radio_sconto.toggle()
+        else:
+            self.radio_sconto_percent.toggle()
 
     def salva_prev(self):
         self.popup_salva_prev()
+
+
+
+    def closeEvent(self, event): # override per non chiudere la finestra senza salvare
+        if self.safe_exit:
+            event.accept()
+        else: # sostituire questo layout con un popup
+            reply = QtWidgets.QMessageBox.question(self, 'Chiusura della finestra di lavoro', 'Chiudendo la finestra di lavoro adesso si perderanno tutti i progressi. Chiudere la finestra?',
+                    QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No, QtWidgets.QMessageBox.No)
+
+            if reply == QtWidgets.QMessageBox.Yes:
+                event.accept()
+                print('Window closed')
+            else:
+                event.ignore()
 
     # <> <> <> <> <> <> <> <> <> <> <> <> <> <> <> <> <> <> <> <> #
             

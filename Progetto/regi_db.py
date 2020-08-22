@@ -6,7 +6,7 @@ Tutti i parametri null = True dovranno diventare obsoleti.
 """
 import os
 import sys
-from peewee import SqliteDatabase, Model, Value, AutoField, CharField, IntegerField, ForeignKeyField, TextField, FloatField
+from peewee import SqliteDatabase, Model, Value, AutoField, CharField, IntegerField, ForeignKeyField, TextField, DecimalField, FloatField
 from playhouse.shortcuts import model_to_dict
 from datetime import date
 
@@ -43,7 +43,7 @@ class Preventivo(BaseModel):
     """
     id = AutoField()
     cliente = ForeignKeyField(Cliente, backref = "preventivi")
-    nick_cliente = CharField(null = True)
+    nick_cliente = CharField(null = True, default = "")
     anno = IntegerField(null = True) # default = date.today().year)
     so = IntegerField(null = True)
     po = IntegerField(null = True)
@@ -52,6 +52,7 @@ class Preventivo(BaseModel):
     testo_in = TextField(null = True)
     # key_testo_out = ForeignKeyField(Testo, null = True)
     testo_fin = TextField(null = True)
+    iva = FloatField(null = True)
 
 class TestoIn(BaseModel):
     """
@@ -76,8 +77,8 @@ class Progetto(BaseModel):
     """
     codice = CharField(unique = True, primary_key = True)
     genitore = ForeignKeyField("self", null = True, backref = "figli")
-    nome = CharField(null = True)
-    descrizione = TextField(null = True)
+    nome = CharField(null = True, default = "")
+    descriz = TextField(null = True, default = "")
     foto_2d = TextField(null = True)
     foto_3d = TextField(null = True)
     materiali = CharField(null = True) # lista dei materiali consentiti. Usare "; ".split()
@@ -89,19 +90,20 @@ class Infisso(BaseModel):
     """
     id = AutoField()
     prev = ForeignKeyField(Preventivo, backref = "infissi")
-    cod_prog = ForeignKeyField(Progetto)
-    posizione = CharField(null = True)
-    descrizione = TextField(null = True)
-    note = CharField(null = True)
-    num_pz = IntegerField(null = True)
-    lunghezza = IntegerField(null = True)
-    altezza = IntegerField(null = True)
-    spessore = IntegerField(null = True)
+    cod_prog = ForeignKeyField(Progetto, null = True)
+    posiz = CharField(null = True, default = "")
+    descriz = TextField(null = True, default = "")
+    note_descriz = CharField(null = True, default = "")
+    num_pz = IntegerField(null = True, default = 1)
+    lunghezza = IntegerField(null = True, default = 0)
+    altezza = IntegerField(null = True, default = 0)
+    spessore = IntegerField(null = True, default = 0)
     materiale = CharField(null = True)
     vernice = CharField(null = True)
-    note_varianti = CharField(null = True)
-    prezzo_netto = IntegerField(null = True)
-    sconto = FloatField(null = True)
+    note_varianti = CharField(null = True, default = "")
+    prezzo_listino = FloatField(null = True, default = 0.0)
+    prezzo_custom = FloatField(null = True, default = 0.0)
+    sconto = FloatField(null = True, default = 0.0)
 
 db.connect()
 db.create_tables([Cliente, Preventivo, TestoIn, TestoFin, Progetto, Infisso])
@@ -117,11 +119,11 @@ def popola_preventivi():
     pass
 
 def popola_progetti():
-    Progetto.create(codice = "BA", genitore = None, nome = "Sistema base", descrizione = "")
-    Progetto.create(codice = "AS", genitore = "BA", nome = "Alzante scorrevole", descrizione = "")
-    Progetto.create(codice = "HS5--------------------------------------------------", genitore = "AS", nome = "Alzante scorrevole 5 ante", descrizione = "Alzante scorrevole a cinque ante.---------------------------------------------------------")
-    Progetto.create(codice = "LA", genitore = None, nome = "Legno/alluminio", descrizione = "")
+    Progetto.create(codice = "BA", genitore = None, nome = "Sistema base", descriz = "")
+    Progetto.create(codice = "AS", genitore = "BA", nome = "Alzante scorrevole", descriz = "")
+    Progetto.create(codice = "HS5--------------------------------------------------", genitore = "AS", nome = "Alzante scorrevole 5 ante", descriz = "Alzante scorrevole a cinque ante.---------------------------------------------------------")
+    Progetto.create(codice = "LA", genitore = None, nome = "Legno/alluminio", descriz = "")
 
 popola_clienti()
-popola_preventivi()
+# popola_preventivi()
 # popola_progetti()
