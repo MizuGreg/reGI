@@ -316,6 +316,7 @@ class DialogScegliTesto(QtWidgets.QDialog):
         self.current_prev = {"id": 0, "cliente": 0, "nick_cliente": "", "anno": 0, "so": 0, "po": 0, "data": "", "testo_in": "", "testo_out": "",
                                 "iva": 0.0}
         self.lista_infissi = []
+        self.current_index = -1
         self.safe_exit = False
 
         self.btn_nuovo_prev.clicked.connect(self.view_db_clienti)
@@ -336,9 +337,16 @@ class DialogScegliTesto(QtWidgets.QDialog):
         self.btn_scegli_testo_in.clicked.connect(self.scegli_testo_in)
         self.btn_deduci_testo_fin.clicked.connect(self.deduci_testo_fin)
         self.btn_scegli_testo_fin.clicked.connect(self.scegli_testo_fin)
+
         self.btn_scegli_progetto.clicked.connect(self.scegli_progetto)
         self.btn_deduci_descr.clicked.connect(self.deduci_descr)
         self.listwidget_infissi.itemClicked.connect(self.load_infisso)
+        self.radio_prezzo_listino.toggled.connect(self.tgl_prezzo_listino)
+        self.radio_prezzo_custom.toggled.connect(self.tgl_prezzo_custom)
+        self.radio_sconto.toggled.connect(self.tgl_sconto)
+        self.radio_sconto_percent.toggled.connect(self.tgl_sconto_percent)
+        self.btn_salva_prev.clicked.connect(self.salva_prev) # provare senza x
+
 
         self.modello_tree_progetti = QtGui.QStandardItemModel()
         self.tree_progetti.setModel(self.modello_tree_progetti)
@@ -468,6 +476,7 @@ class DialogScegliTesto(QtWidgets.QDialog):
             self.current_prev["so"] = 1
         else:
             self.current_prev["so"] = ultimo_prev["so"] + 1
+        self.current_prev["po"] = 0
         self.edit_so.setText(str(self.current_prev["so"]) + "/" + str(self.current_prev["anno"]))
     
     def deduci_PO(self):
@@ -482,6 +491,7 @@ class DialogScegliTesto(QtWidgets.QDialog):
             self.current_prev["po"] = 1
         else:
             self.current_prev["po"] = ultimo_prev["po"] + 1
+        self.current_prev["so"] = 0
         self.edit_po.setText(str(self.current_prev["po"]) + "/" + str(self.current_prev["anno"]))
     
     def deduci_data(self):
@@ -494,6 +504,7 @@ class DialogScegliTesto(QtWidgets.QDialog):
         dialog = DialogScegliTesto()
         if dialog.exec_() != 0:
             testo_da_passare = dialog.testo_da_passare
+            self.current_prev["testo_in"] = testo_da_passare
             if len(testo_da_passare) > 50:
                 testo_da_passare = testo_da_passare[:45] + "..." # elisione
             self.edit_testo_in.setText(testo_da_passare)
@@ -503,44 +514,48 @@ class DialogScegliTesto(QtWidgets.QDialog):
         dialog = DialogScegliTesto()
         if dialog.exec_() != 0:
             testo_da_passare = dialog.testo_da_passare
+            self.current_prev["testo_fin"] = testo_da_passare
             if len(testo_da_passare) > 50:
-                testo_da_passare = testo_da_passare[:45] + "..." # elisione
+                testo_da_passare = testo_da_passare[:45] + "..."
             self.edit_testo_fin.setText(testo_da_passare)
 
     def deduci_testo_in(self):
         try:
             ultimo_prev = model_to_dict(Preventivo.select()
                                     .where(Preventivo.anno == self.current_prev["anno"])
+                                    .order_by(Preventivo.data.desc())
                                     .get())
         except:
             ultimo_prev = None
         if ultimo_prev == None:
-            self.current_prev["testo_in"] = ""
+            testo_da_passare = ""
         else:
-            self.current_prev["testo_in"] = ultimo_prev["testo_in"]
-        self.edit_testo_in.setText(self.current_prev["testo_in"])
+            testo_da_passare = ultimo_prev["testo_in"]
+            self.current_prev["testo_in"] = testo_da_passare
+        if len(testo_da_passare) > 50:
+            testo_da_passare = testo_da_passare[:45] + "..."
+        self.edit_testo_in.setText(testo_da_passare)
 
     def deduci_testo_fin(self):
         try:
             ultimo_prev = model_to_dict(Preventivo.select()
                                     .where(Preventivo.anno == self.current_prev["anno"])
+                                    .order_by(Preventivo.data.desc())
                                     .get())
         except:
             ultimo_prev = None
         if ultimo_prev == None:
-            self.current_prev["testo_fin"] = ""
+            testo_da_passare = ""
         else:
-            self.current_prev["testo_fin"] = ultimo_prev["testo_fin"]
-        self.edit_testo_fin.setText(self.current_prev["testo_fin"])
+            testo_da_passare = ultimo_prev["testo_fin"]
+            self.current_prev["testo_fin"] = testo_da_passare
+        if len(testo_da_passare) > 50:
+            testo_da_passare = testo_da_passare[:45] + "..."
+        self.edit_testo_in.setText(testo_da_passare)
         
     def deduci_nick_cliente(self):
-        pass # wip
-
-    def scegli_progetto(self):
-        pass # wip
-
-    def deduci_descr(self):
-        pass # wip
+        self.current_prev["nick_cliente"] = self.current_cliente["nome"] + " " + self.current_cliente["cognome"]
+        self.edit_nick_cliente.setText(self.current_prev["nick_cliente"])
 
     def crea_prev(self):
         if self.tab_clienti.currentRow() == -1:
@@ -560,13 +575,18 @@ class DialogScegliTesto(QtWidgets.QDialog):
         self.edit_so.setText("/".join((str(prev["so"]), str(prev["anno"]))))
         self.edit_data_prev.setDate(QtCore.QDate.fromString(prev["data"], 'yyyy-MM-dd'))
         self.edit_nick_cliente.setText(prev["nick_cliente"])
-        self.line_prev_nome.setText(" ".join((cliente["nome"], cliente["cognome"])))
+        self.line_prev_nome.setText(cliente["nome"] + " " + cliente["cognome"])
         self.line_prev_via.setText(cliente["via"])
         self.line_prev_cantiere.setText(cliente["cantiere"])
         self.line_prev_comune.setText(cliente["comune"])
         self.line_prev_tel1.setText(cliente["tel1"])
         self.line_prev_tel2.setText(cliente["tel2"])
         self.line_prev_email.setText(cliente["email"])
+
+        if prev["iva"] == int(prev["iva"]):
+            self.line_iva.setText(str(int(prev["iva"])))
+        else:
+            self.line_iva.setText(str(prev["iva"]).replace(".", ","))
 
         self.listwidget_infissi.clear()
         self.lista_infissi = []
@@ -582,7 +602,7 @@ class DialogScegliTesto(QtWidgets.QDialog):
 
     def popola_tree(self, nodo_padre, figlio):
         nodo_figlio_1 = TreeItem(figlio.codice, 12, color = QtGui.QColor(100, 0, 0))
-        nodo_figlio_2 = TreeItem(figlio.descrizione, 12, color = QtGui.QColor(0, 0, 0)) # wip
+        nodo_figlio_2 = TreeItem(figlio.descrizione, 12, color = QtGui.QColor(0, 0, 0))
         nodo_padre.appendRow([nodo_figlio_1, nodo_figlio_2])
         if figlio.figli.dicts() != None:
             for nipote in figlio.figli:
@@ -599,30 +619,85 @@ class DialogScegliTesto(QtWidgets.QDialog):
         codice_inserito = self.edit_cod_prog.text()
         progetto = Progetto.get_or_none(Progetto.codice == codice_inserito)
         if progetto != None:
-            # wip
-            self.edit_descriz.setText(progetto.descrizione)
+            self.edit_descriz.setPlainText(progetto.descrizione)
             # foto 2d e 3d
             self.combo_materiale.clear()
-            self.combo_materiale.addItems()
+            self.combo_materiale.addItems(";".split(progetto.materiali))
+            self.combo_vernice.clear()
+            self.combo_vernice.addItems(";".split(progetto.vernici))
 
+    def scegli_progetto(self):
+        pass # wip, si appoggerà a load_progetto_da_edit
 
-    def load_progetto_da_dialog(self):
-        pass
+    def deduci_descr(self):
+        codice_inserito = self.edit_cod_prog.text()
+        progetto = Progetto.get_or_none(Progetto.codice == codice_inserito)
+        if progetto != None:
+            self.lista_infissi[self.current_index]["descrizione"] = progetto.descrizione
+            self.edit_descriz.setPlainText(progetto.descrizione)
 
-    def calcola_dimensioni(self):
-        pass
+    def calc_dim_superf(self):
+        inf = self.lista_infissi[self.current_index] # caricamento in memoria per semplicità
+        self.line_dimensioni.setHtml(str(inf["lunghezza"] / 10) + " x " + str(inf["altezza"] / 10) + " cm")
+        self.line_superficie.setHtml(str(inf["lunghezza"] * inf["altezza"] / 100) + " cm<sup>2</sup>")
 
-    def calcola_superficie(self):
+    def calc_prezzo_listino(self):
         pass
     
-    def calcola_prezzo_listino(self):
+    def tgl_prezzo_listino(self):
+        self.edit_prezzo_listino.setEnabled(True)
+        prezzo_listino = self.lista_infissi[self.current_index]["prezzo_listino"]
+        self.edit_prezzo_listino.setText(str(prezzo_listino.replace(".", ",")))
+        self.label_x_1.setEnabled(True)
+        self.line_num_pz_1.setEnabled(True)
+        self.edit_prezzo_custom.setEnabled(False)
+        # self.edit_prezzo_custom.setText("0")
+        self.label_x_2.setEnabled(False)
+        self.line_num_pz_2.setEnabled(False)
+
+    def tgl_prezzo_custom(self):
+        self.edit_prezzo_listino.setEnabled(False)
+        # self.edit_prezzo_listino.setText("0")  # questo deve avvenire dietro le quinte sul database!
+        self.label_x_1.setEnabled(False)
+        self.line_num_pz_1.setEnabled(False)
+        self.edit_prezzo_custom.setEnabled(True)
+        prezzo_custom = self.lista_infissi[self.current_index]["prezzo_custom"]
+        self.edit_prezzo_custom.setText(str(prezzo_custom.replace(".", ",")))
+        self.label_x_2.setEnabled(True)
+        self.line_num_pz_2.setEnabled(True)
+
+    def tgl_sconto(self):
+        pass # wip
+
+    def tgl_sconto_percent(self):
         pass
 
+    def calc_importo_netto(self):
+        current_inf = self.lista_infissi[self.current_index]
+        if current_inf["prezzo_listino"] > 0:
+            self.edit_importo_netto.setText(str(current_inf["prezzo_listino"] * current_inf["num_pz"]))
+        else:
+            self.edit_importo_netto.setText(str(current_inf["prezzo_custom"] * current_inf["num_pz"]))
+
+    def calc_importo_lordo(self):
+        current_inf = self.lista_infissi[self.current_index]
+        if current_inf["prezzo_listino"] > 0:
+            prezzo = current_inf["prezzo_listino"] * current_inf["num_pz"]
+        else:
+            prezzo = current_inf["prezzo_custom"] * current_inf["num_pz"]
+        if current_inf["sconto"] > 1:
+            prezzo -= current_inf["sconto"]
+        else:
+            prezzo -= prezzo * current_inf["sconto"]
+        prezzo += prezzo * self.current_prev["iva"]
+        self.line_importo_lordo.setText(str(prezzo))
+
     def load_infisso(self):
-        current_inf = self.lista_infissi[self.indice_lista[self.listwidget_infissi.currentRow()]]
+        self.current_index = self.listwidget_infissi.currentRow()
+        current_inf = self.lista_infissi[self.current_index]
         self.edit_cod_prog.setText(current_inf["cod_prog"])
         self.edit_posiz.setText(current_inf["posiz"])
-        self.edit_descriz.setText(current_inf["descriz"])
+        self.edit_descriz.setPlainText(current_inf["descriz"])
         self.edit_note_descriz.setText(current_inf["note_descriz"])
         # caricare foto 2d e 3d
 
@@ -631,19 +706,20 @@ class DialogScegliTesto(QtWidgets.QDialog):
         self.line_num_pz_2.setText(str(current_inf["num_pz"]))
         self.spin_lunghezza.setValue(current_inf["lunghezza"])
         self.spin_altezza.setValue(current_inf["altezza"])
-        self.spin_spessore.setValue(current_inf["spessore"])
         self.combo_materiale.setCurrentIndex(self.combo_materiale.findText(current_inf["materiale"]))
         self.combo_vernice.setCurrentIndex(self.combo_vernice.findText(current_inf["materiale"]))
         self.edit_note_varianti.setPlainText(current_inf["note_varianti"])
+        self.calc_dim_superf()
 
         if current_inf["prezzo_listino"] > 0:
             self.radio_prezzo_listino.toggle()
         else:
-            self.radio_prezzo_custom.toggle()        
-        if current_inf["sconto"] >= 1:
+            self.radio_prezzo_custom.toggle()       
+        if current_inf["sconto"] > 1:
             self.radio_sconto.toggle()
         else:
             self.radio_sconto_percent.toggle()
+        self.calc_importo() 
 
     def salva_prev(self):
         self.popup_salva_prev()

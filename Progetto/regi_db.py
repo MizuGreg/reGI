@@ -46,7 +46,7 @@ class Preventivo(BaseModel):
     nick_cliente = CharField(null = True, default = "")
     anno = IntegerField(null = True) # default = date.today().year)
     so = IntegerField(null = True)
-    po = IntegerField(null = True)
+    po = IntegerField(null = True) # quando un valore è definito, l'altro è 0 e viceversa
     data = CharField(null = True) # default = date.today().strftime("%Y-%m-%d"))
     # key_testo_in = ForeignKeyField(Testo, null = True)
     testo_in = TextField(null = True)
@@ -97,13 +97,12 @@ class Infisso(BaseModel):
     num_pz = IntegerField(null = True, default = 1)
     lunghezza = IntegerField(null = True, default = 0)
     altezza = IntegerField(null = True, default = 0)
-    spessore = IntegerField(null = True, default = 0)
     materiale = CharField(null = True)
     vernice = CharField(null = True)
     note_varianti = CharField(null = True, default = "")
     prezzo_listino = FloatField(null = True, default = 0.0)
-    prezzo_custom = FloatField(null = True, default = 0.0)
-    sconto = FloatField(null = True, default = 0.0)
+    prezzo_custom = FloatField(null = True, default = 0.0) # quando un valore è definito, l'altro è 0 e viceversa
+    sconto = FloatField(null = True, default = 0.0) # valori da 0.0 a 1.0 indicano sconto percentuale
 
 db.connect()
 db.create_tables([Cliente, Preventivo, TestoIn, TestoFin, Progetto, Infisso])
