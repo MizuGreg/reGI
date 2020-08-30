@@ -602,7 +602,7 @@ class DialogScegliTesto(QtWidgets.QDialog):
 
     def popola_tree(self, nodo_padre, figlio):
         nodo_figlio_1 = TreeItem(figlio.codice, 12, color = QtGui.QColor(100, 0, 0))
-        nodo_figlio_2 = TreeItem(figlio.descrizione, 12, color = QtGui.QColor(0, 0, 0))
+        nodo_figlio_2 = TreeItem(figlio.descriz, 12, color = QtGui.QColor(0, 0, 0))
         nodo_padre.appendRow([nodo_figlio_1, nodo_figlio_2])
         if figlio.figli.dicts() != None:
             for nipote in figlio.figli:
@@ -619,12 +619,13 @@ class DialogScegliTesto(QtWidgets.QDialog):
         codice_inserito = self.edit_cod_prog.text()
         progetto = Progetto.get_or_none(Progetto.codice == codice_inserito)
         if progetto != None:
-            self.edit_descriz.setPlainText(progetto.descrizione)
+            self.edit_descriz.setPlainText(progetto.descriz)
             # foto 2d e 3d
             self.combo_materiale.clear()
             self.combo_materiale.addItems(";".split(progetto.materiali))
             self.combo_vernice.clear()
             self.combo_vernice.addItems(";".split(progetto.vernici))
+            # caricamento delle info di default in self.lista_inf
 
     def scegli_progetto(self):
         pass # wip, si appoggerà a load_progetto_da_edit
@@ -633,8 +634,8 @@ class DialogScegliTesto(QtWidgets.QDialog):
         codice_inserito = self.edit_cod_prog.text()
         progetto = Progetto.get_or_none(Progetto.codice == codice_inserito)
         if progetto != None:
-            self.lista_infissi[self.current_index]["descrizione"] = progetto.descrizione
-            self.edit_descriz.setPlainText(progetto.descrizione)
+            self.lista_infissi[self.current_index]["descriz"] = progetto.descriz
+            self.edit_descriz.setPlainText(progetto.descriz)
 
     def calc_dim_superf(self):
         inf = self.lista_infissi[self.current_index] # caricamento in memoria per semplicità
