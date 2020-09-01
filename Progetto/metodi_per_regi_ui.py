@@ -620,15 +620,23 @@ class DialogScegliTesto(QtWidgets.QDialog):
         progetto = Progetto.get_or_none(Progetto.codice == codice_inserito)
         if progetto != None:
             self.edit_descriz.setPlainText(progetto.descriz)
-            # foto 2d e 3d
+            # mostrare foto 2d e 3d
             self.combo_materiale.clear()
             self.combo_materiale.addItems(";".split(progetto.materiali))
+            self.combo_materiale.setCurrentIndex(0)
             self.combo_vernice.clear()
             self.combo_vernice.addItems(";".split(progetto.vernici))
-            # caricamento delle info di default in self.lista_inf
+            self.combo_vernice.setCurrentIndex(0)
+            
+            self.lista_infissi[self.current_index]["cod_prog"] = progetto.codice
+            self.lista_infissi[self.current_index]["descriz"] = progetto.descriz
+            self.lista_infissi[self.current_index]["materiale"] = self.combo_materiale.itemText(0)
+            self.lista_infissi[self.current_index]["vernice"] = self.combo_vernice.itemText(0)
+            self.lista_infissi[self.current_index]["foto_2d"] = progetto.foto_2d
+            self.lista_infissi[self.current_index]["foto_3d"] = progetto.foto_3d
 
     def scegli_progetto(self):
-        pass # wip, si appoggerà a load_progetto_da_edit
+        pass # si appoggerà a load_progetto_da_edit
 
     def deduci_descr(self):
         codice_inserito = self.edit_cod_prog.text()
@@ -652,13 +660,13 @@ class DialogScegliTesto(QtWidgets.QDialog):
         self.label_x_1.setEnabled(True)
         self.line_num_pz_1.setEnabled(True)
         self.edit_prezzo_custom.setEnabled(False)
-        # self.edit_prezzo_custom.setText("0")
+        # self.edit_prezzo_custom.setText("0") # questo deve avvenire dietro le quinte sul database
         self.label_x_2.setEnabled(False)
         self.line_num_pz_2.setEnabled(False)
 
     def tgl_prezzo_custom(self):
         self.edit_prezzo_listino.setEnabled(False)
-        # self.edit_prezzo_listino.setText("0")  # questo deve avvenire dietro le quinte sul database!
+        # self.edit_prezzo_listino.setText("0")  # questo deve avvenire dietro le quinte sul database
         self.label_x_1.setEnabled(False)
         self.line_num_pz_1.setEnabled(False)
         self.edit_prezzo_custom.setEnabled(True)
@@ -668,6 +676,7 @@ class DialogScegliTesto(QtWidgets.QDialog):
         self.line_num_pz_2.setEnabled(True)
 
     def tgl_sconto(self):
+        self.edit_sconto.setEnabled(True)
         pass # wip
 
     def tgl_sconto_percent(self):

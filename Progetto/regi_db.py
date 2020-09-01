@@ -70,6 +70,14 @@ class TestoFin(BaseModel):
     id = AutoField()
     testo = TextField(null = True)
 
+class Foto_2D(BaseModel):
+    id = AutoField()
+    base64 = TextField(null = True)
+
+class Foto_3D(BaseModel):
+    id = AutoField()
+    base64 = TextField(null = True)
+
 class Progetto(BaseModel):
     """
     Tabella che registra i progetti base da cui partire
@@ -79,8 +87,8 @@ class Progetto(BaseModel):
     genitore = ForeignKeyField("self", null = True, backref = "figli")
     nome = CharField(null = True, default = "")
     descriz = TextField(null = True, default = "")
-    foto_2d = TextField(null = True)
-    foto_3d = TextField(null = True)
+    foto_2d = ForeignKeyField(Foto_2D, null = True, backref = "progetti")
+    foto_3d = ForeignKeyField(Foto_3D, null = True, backref = "progetti")
     materiali = CharField(null = True) # lista dei materiali consentiti. Usare "; ".split()
     vernici = CharField(null = True)
 
@@ -94,6 +102,8 @@ class Infisso(BaseModel):
     posiz = CharField(null = True, default = "")
     descriz = TextField(null = True, default = "")
     note_descriz = CharField(null = True, default = "")
+    foto_2d = ForeignKeyField(Foto_2D, null = True, backref = "infissi")
+    foto_3d = ForeignKeyField(Foto_3D, null = True, backref = "infissi")
     num_pz = IntegerField(null = True, default = 1)
     lunghezza = IntegerField(null = True, default = 0)
     altezza = IntegerField(null = True, default = 0)
@@ -105,7 +115,7 @@ class Infisso(BaseModel):
     sconto = FloatField(null = True, default = 0.0) # valori da 0.0 a 1.0 indicano sconto percentuale
 
 db.connect()
-db.create_tables([Cliente, Preventivo, TestoIn, TestoFin, Progetto, Infisso])
+db.create_tables([Cliente, Preventivo, TestoIn, TestoFin, Foto_2D, Foto_3D, Progetto, Infisso])
 
 # Queste righe servono solo per riempire il DB e testarne il funzionamento.
 
