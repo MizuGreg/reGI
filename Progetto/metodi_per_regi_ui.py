@@ -615,6 +615,9 @@ class DialogScegliTesto(QtWidgets.QDialog):
             for caso_base in casi_base:
                 self.popola_tree(self.root_node, caso_base)
 
+    def salva_modifiche_inf(self, item):
+        pass # wip
+
     def load_progetto_da_edit(self):
         codice_inserito = self.edit_cod_prog.text()
         progetto = Progetto.get_or_none(Progetto.codice == codice_inserito)
@@ -654,9 +657,9 @@ class DialogScegliTesto(QtWidgets.QDialog):
         pass
     
     def tgl_prezzo_listino(self):
-        self.edit_prezzo_listino.setEnabled(True)
         prezzo_listino = self.lista_infissi[self.current_index]["prezzo_listino"]
-        self.edit_prezzo_listino.setText(str(prezzo_listino.replace(".", ",")))
+        self.edit_prezzo_listino.setEnabled(True)
+        self.edit_prezzo_listino.setText(str(prezzo_listino).replace(".", ","))
         self.label_x_1.setEnabled(True)
         self.line_num_pz_1.setEnabled(True)
         self.edit_prezzo_custom.setEnabled(False)
@@ -665,71 +668,79 @@ class DialogScegliTesto(QtWidgets.QDialog):
         self.line_num_pz_2.setEnabled(False)
 
     def tgl_prezzo_custom(self):
+        prezzo_custom = self.lista_infissi[self.current_index]["prezzo_custom"]
         self.edit_prezzo_listino.setEnabled(False)
         # self.edit_prezzo_listino.setText("0")  # questo deve avvenire dietro le quinte sul database
         self.label_x_1.setEnabled(False)
         self.line_num_pz_1.setEnabled(False)
         self.edit_prezzo_custom.setEnabled(True)
-        prezzo_custom = self.lista_infissi[self.current_index]["prezzo_custom"]
-        self.edit_prezzo_custom.setText(str(prezzo_custom.replace(".", ",")))
+        self.edit_prezzo_custom.setText(str(prezzo_custom).replace(".", ","))
         self.label_x_2.setEnabled(True)
         self.line_num_pz_2.setEnabled(True)
 
     def tgl_sconto(self):
+        sconto = self.lista_infissi[self.current_index]["sconto"]
         self.edit_sconto.setEnabled(True)
-        pass # wip
+        self.edit_sconto.setText(str(sconto).replace(".", ","))
+        self.edit_sconto_percent.setEnabled(False)
+        self.label_percent_1.setEnabled(False)
 
     def tgl_sconto_percent(self):
-        pass
+        sconto_percent = self.lista_infissi[self.current_index]["sconto"] * 100
+        self.edit_sconto.setEnabled(False)
+        self.edit_sconto_percent.setEnabled(True)
+        self.edit_sconto_percent.setText(str(sconto_percent).replace(".", ","))
+        self.label_percent_1.setEnabled(True)
 
     def calc_importo_netto(self):
-        current_inf = self.lista_infissi[self.current_index]
-        if current_inf["prezzo_listino"] > 0:
-            self.edit_importo_netto.setText(str(current_inf["prezzo_listino"] * current_inf["num_pz"]))
+        inf = self.lista_infissi[self.current_index]
+        if inf["prezzo_listino"] > 0:
+            self.edit_importo_netto.setText(str(inf["prezzo_listino"] * inf["num_pz"]))
         else:
-            self.edit_importo_netto.setText(str(current_inf["prezzo_custom"] * current_inf["num_pz"]))
+            self.edit_importo_netto.setText(str(inf["prezzo_custom"] * inf["num_pz"]))
 
     def calc_importo_lordo(self):
-        current_inf = self.lista_infissi[self.current_index]
-        if current_inf["prezzo_listino"] > 0:
-            prezzo = current_inf["prezzo_listino"] * current_inf["num_pz"]
+        inf = self.lista_infissi[self.current_index]
+        if inf["prezzo_listino"] > 0:
+            prezzo = inf["prezzo_listino"] * inf["num_pz"]
         else:
-            prezzo = current_inf["prezzo_custom"] * current_inf["num_pz"]
-        if current_inf["sconto"] > 1:
-            prezzo -= current_inf["sconto"]
+            prezzo = inf["prezzo_custom"] * inf["num_pz"]
+        if inf["sconto"] > 1:
+            prezzo -= inf["sconto"]
         else:
-            prezzo -= prezzo * current_inf["sconto"]
+            prezzo -= prezzo * inf["sconto"]
         prezzo += prezzo * self.current_prev["iva"]
         self.line_importo_lordo.setText(str(prezzo))
 
     def load_infisso(self):
         self.current_index = self.listwidget_infissi.currentRow()
-        current_inf = self.lista_infissi[self.current_index]
-        self.edit_cod_prog.setText(current_inf["cod_prog"])
-        self.edit_posiz.setText(current_inf["posiz"])
-        self.edit_descriz.setPlainText(current_inf["descriz"])
-        self.edit_note_descriz.setText(current_inf["note_descriz"])
+        inf = self.lista_infissi[self.current_index]
+        self.edit_cod_prog.setText(inf["cod_prog"])
+        self.edit_posiz.setText(inf["posiz"])
+        self.edit_descriz.setPlainText(inf["descriz"])
+        self.edit_note_descriz.setText(inf["note_descriz"])
         # caricare foto 2d e 3d
 
-        self.spin_num_pz.setValue(current_inf["num_pz"])
-        self.line_num_pz_1.setText(str(current_inf["num_pz"]))
-        self.line_num_pz_2.setText(str(current_inf["num_pz"]))
-        self.spin_lunghezza.setValue(current_inf["lunghezza"])
-        self.spin_altezza.setValue(current_inf["altezza"])
-        self.combo_materiale.setCurrentIndex(self.combo_materiale.findText(current_inf["materiale"]))
-        self.combo_vernice.setCurrentIndex(self.combo_vernice.findText(current_inf["materiale"]))
-        self.edit_note_varianti.setPlainText(current_inf["note_varianti"])
+        self.spin_num_pz.setValue(inf["num_pz"])
+        self.line_num_pz_1.setText(str(inf["num_pz"]))
+        self.line_num_pz_2.setText(str(inf["num_pz"]))
+        self.spin_lunghezza.setValue(inf["lunghezza"])
+        self.spin_altezza.setValue(inf["altezza"])
+        self.combo_materiale.setCurrentIndex(self.combo_materiale.findText(inf["materiale"]))
+        self.combo_vernice.setCurrentIndex(self.combo_vernice.findText(inf["materiale"]))
+        self.edit_note_varianti.setPlainText(inf["note_varianti"])
         self.calc_dim_superf()
 
-        if current_inf["prezzo_listino"] > 0:
+        if inf["prezzo_listino"] > 0:
             self.radio_prezzo_listino.toggle()
         else:
             self.radio_prezzo_custom.toggle()       
-        if current_inf["sconto"] > 1:
+        if inf["sconto"] > 1:
             self.radio_sconto.toggle()
         else:
             self.radio_sconto_percent.toggle()
-        self.calc_importo() 
+        self.calc_importo_netto()
+        self.calc_importo_lordo()
 
     def salva_prev(self):
         self.popup_salva_prev()
