@@ -3060,7 +3060,7 @@ d'ordine</string>
         <string>IVA</string>
        </property>
       </widget>
-      <widget class="QLineEdit" name="edit_nick_cliente_2">
+      <widget class="QLineEdit" name="edit_iva">
        <property name="geometry">
         <rect>
          <x>960</x>

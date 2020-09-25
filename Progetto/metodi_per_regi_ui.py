@@ -347,7 +347,40 @@ class DialogScegliTesto(QtWidgets.QDialog):
         self.radio_sconto_percent.toggled.connect(self.tgl_sconto_percent)
         self.btn_salva_prev.clicked.connect(self.salva_prev) # provare senza x
 
-
+        self.edit_so.editingFinished.connect(self.salva_modifiche_prev, "so")
+        self.edit_so.textChanged.connect(self.salva_modifiche_prev, "so")
+        self.edit_po.editingFinished.connect(self.salva_modifiche_prev, "po")
+        self.edit_po.textChanged.connect(self.salva_modifiche_prev, "po")
+        self.edit_data_prev.dateChanged.connect(self.salva_modifiche_prev, "data")
+        self.edit_nick_cliente.editingFinished.connect(self.salva_modifiche_prev, "nick_cliente")
+        self.edit_nick_cliente.textChanged.connect(self.salva_modifiche_prev, "nick_cliente")
+        # non è chiamato su testo_in, la call avviene prima, in scegli_testo_in
+        self.edit_iva.editingFinished.connect(self.salva_modifiche_prev, "iva")
+        self.edit_iva.textChanged.connect(self.salva_modifiche_prev, "iva")
+        
+        # textChanged verrà chiamato troppo frequentemente!
+        self.edit_cod_prog.editingFinished.connect(self.salva_modifiche_inf, "cod_prog")
+        self.edit_cod_prog.textChanged.connect(self.salva_modifiche_inf, "cod_prog")
+        self.edit_posiz.editingFinished.connect(self.salva_modifiche_inf, "posiz")
+        self.edit_posiz.textChanged.connect(self.salva_modifiche_inf, "posiz")
+        self.edit_descriz.textChanged.connect(self.salva_modifiche_inf, "descriz")
+        self.edit_note_descriz.editingFinished.connect(self.salva_modifiche_inf, "note_descriz")
+        self.edit_note_descriz.textChanged.connect(self.salva_modifiche_inf, "note_descriz")
+        self.spin_num_pz.valueChanged.connect(self.salva_modifiche_inf, "num_pz")
+        self.spin_lunghezza.valueChanged.connect(self.salva_modifiche_inf, "lunghezza")
+        self.spin_altezza.valueChanged.connect(self.salva_modifiche_inf, "altezza")
+        self.combo_materiale.currentIndexChanged.connect(self.salva_modifiche_inf, "materiale")
+        self.combo_vernice.currentIndexChanged.connect(self.salva_modifiche_inf, "vernice")
+        self.edit_note_varianti.textChanged.connect(self.salva_modifiche_inf, "note_varianti")
+        self.edit_prezzo_listino.editingFinished.connect(self.salva_modifiche_inf, "prezzo_listino")
+        self.edit_prezzo_listino.textChanged.connect(self.salva_modifiche_inf, "prezzo_listino")
+        self.edit_prezzo_custom.editingFinished.connect(self.salva_modifiche_inf, "prezzo_custom")
+        self.edit_prezzo_custom.textChanged.connect(self.salva_modifiche_inf, "prezzo_custom")
+        self.edit_sconto.editingFinished.connect(self.salva_modifiche_inf, "sconto")
+        self.edit_sconto.textChanged.connect(self.salva_modifiche_inf, "sconto")
+        self.edit_sconto_percent.editingFinished.connect(self.salva_modifiche_inf, "sconto_percent")
+        self.edit_sconto_percent.textChanged.connect(self.salva_modifiche_inf, "sconto_percent")
+        
         self.modello_tree_progetti = QtGui.QStandardItemModel()
         self.tree_progetti.setModel(self.modello_tree_progetti)
         self.root_node = self.modello_tree_progetti.invisibleRootItem()
@@ -615,8 +648,13 @@ class DialogScegliTesto(QtWidgets.QDialog):
             for caso_base in casi_base:
                 self.popola_tree(self.root_node, caso_base)
 
-    def salva_modifiche_inf(self, item):
-        pass # wip
+    def salva_modifiche_prev(self, campo):
+        pass
+
+    def salva_modifiche_inf(self, campo):
+        if campo == "lunghezza":
+            
+        # wip
 
     def load_progetto_da_edit(self):
         codice_inserito = self.edit_cod_prog.text()
