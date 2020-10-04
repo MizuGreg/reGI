@@ -652,8 +652,8 @@ class DialogScegliTesto(QtWidgets.QDialog):
         pass
 
     def salva_modifiche_inf(self, campo):
-        if campo == "lunghezza":
-            
+        if "lunghezza" in campo:
+            pass
         # wip
 
     def load_progetto_da_edit(self):
